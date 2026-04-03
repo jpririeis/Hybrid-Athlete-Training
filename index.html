@@ -3,64 +3,271 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Hybrid Command</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono&family=DM+Sans:wght@400;700&display=swap" rel="stylesheet">
+<title>Hybrid Athlete | BPN Red</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;700;900&family=JetBrains+Mono&display=swap" rel="stylesheet">
 <style>
   :root { 
-    --bg: #0a0a0f; 
-    --surface: #111118; 
-    --border: #2a2a3a; 
-    --accent: #00e5ff; 
-    --accent2: #ff6b35; 
-    --accent3: #a8ff78; 
-    --text: #e8e8f0; 
-    --muted: #666680; 
+    --bpn-red: #ff0000;
+    --bpn-black: #0e0e0e;
+    --bpn-grey: #1a1a1a;
+    --bpn-light-grey: #2d2d2d;
+    --text: #ffffff;
+    --muted: #888888;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   
   body { 
-    background: var(--bg); 
+    background: var(--bpn-black); 
     color: var(--text); 
-    font-family: 'DM Sans', sans-serif; 
+    font-family: 'Inter', sans-serif; 
     padding: 20px; 
-    padding-bottom: 30px;
-    max-width: 500px;
+    max-width: 500px; 
     margin: 0 auto;
+    letter-spacing: -0.02em;
   }
 
-  header { text-align: center; margin-bottom: 25px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
-  h1 { font-family: 'Bebas Neue', sans-serif; font-size: 52px; color: #fff; line-height: 0.9; margin-bottom: 8px; }
-  
+  header { 
+    text-align: left; 
+    margin-bottom: 30px; 
+    border-left: 4px solid var(--bpn-red); 
+    padding-left: 15px;
+  }
+
+  h1 { 
+    font-family: 'Bebas Neue', sans-serif; 
+    font-size: 64px; 
+    line-height: 0.85; 
+    text-transform: uppercase;
+    font-weight: 900;
+  }
+
   #countdown { 
-    font-family: 'DM Mono', monospace; 
-    font-size: 13px; 
-    color: var(--accent2); 
-    background: rgba(255, 107, 53, 0.1);
-    border: 1px solid var(--accent2);
-    display: inline-block;
-    padding: 4px 12px;
-    border-radius: 20px;
-    margin-bottom: 10px;
+    font-family: 'JetBrains Mono', monospace; 
+    font-size: 11px; 
+    color: var(--bpn-red); 
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-top: 5px;
+    display: block;
   }
 
-  .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+  .tabs { display: flex; gap: 2px; background: var(--bpn-grey); padding: 4px; border-radius: 4px; margin-bottom: 25px; }
   .tab-btn { 
-    background: var(--surface); 
-    border: 1px solid var(--border); 
+    background: transparent; 
+    border: none; 
     color: var(--muted); 
-    padding: 15px; 
-    font-family: 'DM Mono'; 
+    padding: 12px; 
+    font-family: 'Inter'; 
     font-size: 12px; 
+    font-weight: 700;
     cursor: pointer; 
     flex: 1; 
-    border-radius: 8px;
-    transition: 0.2s;
     text-transform: uppercase;
+    transition: 0.2s;
   }
-  .tab-btn.active { border-color: var(--accent); color: var(--accent); background: #161625; }
+  .tab-btn.active { background: var(--bpn-light-grey); color: #fff; }
 
   .panel { display: none; }
+  .panel.active { display: block; animation: fadeIn 0.2s ease-in; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .card { 
+    background: var(--bpn-grey); 
+    border-radius: 2px; 
+    padding: 24px; 
+    margin-bottom: 12px; 
+    border-top: 1px solid var(--bpn-light-grey);
+  }
+
+  .tag { 
+    font-family: 'JetBrains Mono', monospace; 
+    font-size: 9px; 
+    color: var(--bpn-red); 
+    text-transform: uppercase; 
+    font-weight: 800; 
+    margin-bottom: 8px; 
+    display: block;
+  }
+
+  .card-title { 
+    font-family: 'Bebas Neue', sans-serif; 
+    font-size: 36px; 
+    color: #fff; 
+    line-height: 1; 
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+  }
+
+  .timing-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 15px;
+    display: block;
+  }
+
+  .instruction-list { list-style: none; margin-bottom: 20px; }
+  .instruction-list li { 
+    font-size: 13px; 
+    margin-bottom: 10px; 
+    padding-left: 15px; 
+    border-left: 1px solid var(--bpn-light-grey);
+    color: #ddd;
+  }
+  .instruction-list b { color: #fff; font-weight: 700; }
+
+  .summary-box { 
+    background: var(--bpn-red); 
+    padding: 15px; 
+    border-radius: 2px; 
+    margin-top: 20px;
+  }
+  .summary-row { 
+    display: flex; 
+    justify-content: space-between; 
+    font-family: 'Bebas Neue', sans-serif; 
+    font-size: 24px; 
+    color: #fff;
+  }
+
+  .footer-mantra {
+    text-align: center;
+    margin-top: 30px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    color: var(--bpn-light-grey);
+    letter-spacing: 2px;
+  }
+</style>
+</head>
+<body>
+
+  <header>
+    <h1>HYBRID<br>ATHLETE</h1>
+    <span id="countdown">-- DAYS TO RACE DAY</span>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab(0)">Training</button>
+    <button class="tab-btn" onclick="showTab(1)">Fueling</button>
+  </div>
+
+  <div class="panel active" id="p0">
+    <div class="card">
+        <span class="tag" id="day-display">MONDAY</span>
+        <div class="card-title" id="cardio-title">--</div>
+        <span class="timing-label">Session 01 // Endurance</span>
+        <p id="cardio-mission" style="font-size: 14px; color: #bbb; line-height: 1.5;"></p>
+    </div>
+
+    <div class="card">
+        <div class="card-title" id="gym-title">--</div>
+        <span class="timing-label">Session 02 // Strength</span>
+        <p id="gym-mission" style="font-size: 14px; color: #bbb; line-height: 1.5;"></p>
+    </div>
+  </div>
+
+  <div class="panel" id="p1">
+    
+    <div class="card">
+      <span class="tag">System 01</span>
+      <div class="card-title">MORNING PRIME</div>
+      <span class="timing-label">Immediately Upon Waking</span>
+      <ul class="instruction-list">
+        <li><b>300mg Alpha GPC:</b> Focus and business performance.</li>
+        <li><b>1/4 tsp Salt:</b> Adrenal reset & morning hydration.</li>
+        <li><b>1/2 tsp Mag Malate:</b> Cellular ATP fuel.</li>
+      </ul>
+      <p style="font-size: 11px; color: var(--muted); line-height: 1.4;">
+        <b>Benefit:</b> Resets the system after overnight nutrient loss and establishes cognitive drive for the day.
+      </p>
+    </div>
+
+    <div class="card" style="border-left: 2px solid var(--bpn-red);">
+      <span class="tag">System 02</span>
+      <div class="card-title">CARDIO BOOSTER</div>
+      <span class="timing-label">15M Pre / Intra Session</span>
+      <ul class="instruction-list">
+        <li><b>40g Maltodextrin:</b> High-velocity muscle fuel.</li>
+        <li><b>20g Fructose:</b> Maximized gut absorption.</li>
+        <li><b>6g Citrulline Malate:</b> Nitric oxide pump for altitude.</li>
+      </ul>
+      <p style="font-size: 11px; color: var(--muted); line-height: 1.4;">
+        <b>Benefit:</b> Prevents muscle breakdown during aerobic bouts and maintains steady blood glucose levels.
+      </p>
+    </div>
+
+    <div class="card">
+      <span class="tag">System 03</span>
+      <div class="card-title">MIDDAY RESET</div>
+      <span class="timing-label">30M Pre-Strength Training</span>
+      <ul class="instruction-list">
+        <li><b>5g Creatine Mono:</b> Strength output & cell hydration.</li>
+        <li><b>1/2 tsp Salt:</b> Replaces intra-cardio sodium loss.</li>
+        <li><b>1/4 tsp Potassium:</b> Muscle firing & pump maintenance.</li>
+      </ul>
+      <p style="font-size: 11px; color: var(--muted); line-height: 1.4;">
+        <b>Benefit:</b> Recharges your physical "battery" for heavy lifting after a demanding morning cardio session.
+      </p>
+    </div>
+
+    <div class="card">
+      <span class="tag">System 04</span>
+      <div class="card-title">SLEEP RESET</div>
+      <span class="timing-label">45M Before Bed</span>
+      <ul class="instruction-list">
+        <li><b>Mag Glycinate:</b> Central Nervous System relaxation.</li>
+        <li><b>200mg L-Theanine:</b> Stress and cortisol reduction.</li>
+        <li><b>1 tsp Tart Cherry:</b> Anti-inflammatory & sleep quality.</li>
+      </ul>
+      <p style="font-size: 11px; color: var(--muted); line-height: 1.4;">
+        <b>Benefit:</b> Accelerates tissue repair and signals the brain to transition into deep recovery mode.
+      </p>
+    </div>
+
+    <div class="summary-box">
+      <div class="summary-row"><span>Daily Goal:</span> <span>150G Protein</span></div>
+      <div style="font-size: 11px; color: #fff; opacity: 0.9; margin-top: 5px; text-transform: uppercase; font-weight: 700;">Aim for 3,000+ Calories</div>
+    </div>
+  </div>
+
+  <div class="footer-mantra">GO ONE MORE.</div>
+
+  <script>
+    function updateClock() {
+      const race = new Date("September 11, 2026").getTime();
+      const diff = race - new Date().getTime();
+      document.getElementById("countdown").innerText = Math.floor(diff / (1000 * 60 * 60 * 24)) + " DAYS TO RACE DAY";
+    }
+
+    const trainingData = {
+      0: { c: "Active Recovery", cm: "45m Nasal breathing walk. Focus on lowering inflammation and joint health.", g: "Full Mobility", gm: "20m Hip & Ankle flow. Zero resistance today." },
+      1: { c: "Easy Run (Zone 2)", cm: "45-60m conversational pace. Building the aerobic engine.", g: "Lower (Ham Focus)", gm: "2 Hamstring Primary / 2 Quad Secondary / 2 Calves." },
+      2: { c: "Swim Intervals", cm: "10x50m Fast (30s rest). Working catch, pull, and pace control.", g: "Core & Stability", gm: "Heavy Core + Single Leg balance for bike power." },
+      3: { c: "Easy Run (Zone 2)", cm: "45m Steady state. Focus on efficiency and light turnover.", g: "Upper (Push/Pull)", gm: "2 Push / 2 Pull / 2 Shoulder. Compound focus." },
+      4: { c: "Endurance Swim", cm: "1500m Continuous. Building rhythmic breathing and endurance.", g: "Functional Strength", gm: "Kettlebell lunges & Rotational power." },
+      5: { c: "Tempo Run (Zone 4)", cm: "20m threshold effort. Practicing race-pace under fatigue.", g: "Upper Hypertrophy", gm: "High volume Back/Chest/Arms. 12-15 reps." },
+      6: { c: "BIG BRICK SESSION", cm: "2hr+ Bike followed by 20m Run. Ironman specific preparation.", g: "Rest from Gym", gm: "Full CNS recovery. Prioritize hydration and fuel." }
+    };
+
+    function showTab(idx) {
+      document.querySelectorAll('.panel').forEach((p, i) => p.classList.toggle('active', i === idx));
+      document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i === idx));
+    }
+
+    const today = new Date();
+    const day = today.getDay();
+    document.getElementById("day-display").innerText = today.toLocaleDateString('en-US', { weekday: 'long' }).toUpperCase();
+    document.getElementById("cardio-title").innerText = trainingData[day].c;
+    document.getElementById("cardio-mission").innerText = trainingData[day].cm;
+    document.getElementById("gym-title").innerText = trainingData[day].g;
+    document.getElementById("gym-mission").innerText = trainingData[day].gm;
+    updateClock();
+  </script>
+</body>
+</html>  .panel { display: none; }
   .panel.active { display: block; animation: slideUp 0.3s ease-out; }
   
   @keyframes slideUp {
