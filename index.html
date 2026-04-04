@@ -27,7 +27,7 @@
   .fuel-list { list-style: none; font-size: 12px; }
   .fuel-list li { margin-bottom: 8px; color: #ddd; }
   .fuel-list b { color: #fff; }
-  .footer-mantra { text-align: center; margin-top: 30px; font-family: 'Bebas Neue', sans-serif; font-size: 20px; color: var(--bpn-light-grey); letter-spacing: 2px; padding-bottom: 20px; }
+  .footer-mantra { text-align: center; margin-top: 30px; font-family: 'Bebas Neue', sans-serif; font-size: 20px; color: var(--bpn-light-grey); letter-spacing: 2px; padding-bottom: 20px; text-transform: uppercase; }
 </style>
 </head>
 <body>
@@ -38,27 +38,25 @@
   </header>
 
   <div class="tabs">
-    <button class="tab-btn active" onclick="showTab(0)">Training</button>
-    <button class="tab-btn" onclick="showTab(1)">Fueling</button>
+    <button class="tab-btn active" id="tab0" onclick="showTab(0)">Training</button>
+    <button class="tab-btn" id="tab1" onclick="showTab(1)">Fueling</button>
   </div>
 
   <div class="panel active" id="p0">
     <div style="text-align: center; margin-bottom: 15px;">
         <span id="day-display" style="font-family: 'JetBrains Mono'; color: var(--bpn-red); font-size: 12px; font-weight: 800;"></span>
     </div>
-
     <div class="card" style="border-left: 4px solid var(--bpn-red);">
         <span class="tag">Cardio // Endurance</span>
         <div class="card-title" id="cardio-title">--</div>
         <div class="metric-grid">
-            <div class="metric">Target Duration<b><span id="c-time">--</span></b></div>
+            <div class="metric">Duration<b><span id="c-time">--</span></b></div>
             <div class="metric">Intensity/Zone<b><span id="c-zone">--</span></b></div>
             <div class="metric">Effort (RPE)<b><span id="c-rpe">--</span></b></div>
             <div class="metric">Type<b><span id="c-type">--</span></b></div>
         </div>
         <p id="cardio-mission" class="instruction"></p>
     </div>
-
     <div class="card">
         <span class="tag">Strength // Power</span>
         <div class="card-title" id="gym-title">--</div>
@@ -71,7 +69,7 @@
       <span class="tag">System 01 // Morning</span>
       <div class="card-title">MORNING PRIME</div>
       <ul class="fuel-list">
-        <li><b>300mg Alpha GPC:</b> Cognitive drive.</li>
+        <li><b>300mg Alpha GPC:</b> Focus & Business drive.</li>
         <li><b>1/4 tsp Salt:</b> Adrenal reset.</li>
         <li><b>1/2 tsp Mag Malate:</b> ATP fuel.</li>
       </ul>
@@ -105,24 +103,25 @@
     </div>
   </div>
 
-  <div class="footer-mantra">GO ONE MORE.</div>
+  <div class="footer-mantra">1% Better Everyday</div>
 
   <script>
     function updateClock() {
       const race = new Date("September 11, 2026").getTime();
-      const diff = race - new Date().getTime();
+      const now = new Date().getTime();
+      const diff = race - now;
       const days = Math.floor(diff / (1000 * 60 * 60 * 24));
       document.getElementById("countdown").innerText = days + " DAYS TO RACE DAY";
     }
 
     const trainingData = {
-      0: { c: "Easy Run", ct: "30m", cz: "Zone 2", cr: "4/10", ct2: "Running", cm: "Conversational pace. 3m run/1m walk if needed. Save the foot.", g: "Legs (Ham Focus)", gm: "RDLs, Leg Curls, and 3x20 Calves. Focus on the stretch." },
-      1: { c: "Swim Drills", ct: "30m", cz: "Technique", cr: "3/10", ct2: "Swimming", cm: "Drills only. Focus on body position. 50m intervals with 30s rest.", g: "Core & Stability", gm: "Deadbugs, Bird-Dogs, and Plank holds. Core is the foundation." },
-      2: { c: "Easy Bike", ct: "45m", cz: "Zone 2", cr: "4/10", ct2: "Cycling", cm: "Steady spin (85+ RPM). Get used to the saddle. Stay flat.", g: "Upper (Push/Pull)", gm: "Bench Press, Rows, Overhead Press, and Pull-ups. 5x5 Strength." },
-      3: { c: "Light Swim + Sauna", ct: "30m", cz: "Zone 1", cr: "2/10", ct2: "Swimming", cm: "Very easy recovery laps. 15-20m Sauna post-swim for flush.", g: "Legs (Quad Focus)", gm: "Hack Squat or Leg Press. Focus on explosive push power." },
-      4: { c: "Tempo Run", ct: "30m", cz: "Zone 3/4", cr: "7/10", ct2: "Running", cm: "10m Warmup, 15m 'Comfortably Hard', 5m Cooldown.", g: "Upper Hypertrophy", gm: "DB Bench, Lat Pulldowns, and Arm supersets. 12-15 Reps." },
-      5: { c: "BRICK SESSION", ct: "60m B / 15m R", cz: "Mixed", cr: "8/10", ct2: "Bike+Run", cm: "Transition focus. Ride easy, run immediately after for 15m.", g: "Full Rest", gm: "Zero gym volume. Focus on nutrition and hydration." },
-      6: { c: "Walk & Yoga", ct: "45m", cz: "Zone 1", cr: "1/10", ct2: "Recovery", cm: "Active recovery. Flush the legs from the Brick. Focus on foot mobility.", g: "Full Rest", gm: "Prepare for the week ahead. Go One More." }
+      0: { c: "Walk & Yoga", ct: "45m", cz: "Zone 1", cr: "1/10", ct2: "Recovery", cm: "Active recovery. Flush the legs. Focus on foot mobility.", g: "Full Rest", gm: "Prepare for the week ahead." },
+      1: { c: "Easy Run", ct: "30m", cz: "Zone 2", cr: "4/10", ct2: "Running", cm: "Conversational pace. 3m run/1m walk if needed. Save the foot.", g: "Legs (Ham Focus)", gm: "RDLs, Leg Curls, and 3x20 Calves. Focus on the stretch." },
+      2: { c: "Swim Drills", ct: "30m", cz: "Technique", cr: "3/10", ct2: "Swimming", cm: "Drills only. 50m intervals with 30s rest. Focus on body position.", g: "Core & Stability", gm: "Deadbugs, Bird-Dogs, and Plank holds. Core foundation." },
+      3: { c: "Easy Bike", ct: "45m", cz: "Zone 2", cr: "4/10", ct2: "Cycling", cm: "Steady spin (85+ RPM). Get used to the saddle. Stay flat.", g: "Upper (Push/Pull)", gm: "Bench, Rows, OHP, and Pull-ups. 5x5 Strength focus." },
+      4: { c: "Light Swim + Sauna", ct: "30m", cz: "Zone 1", cr: "2/10", ct2: "Swimming", cm: "Easy recovery laps. 15-20m Sauna post-swim for flush.", g: "Legs (Quad Focus)", gm: "Hack Squat or Leg Press. Focus on explosive push power." },
+      5: { c: "Tempo Run", ct: "30m", cz: "Zone 3/4", cr: "7/10", ct2: "Running", cm: "10m Warmup, 15m 'Comfortably Hard', 5m Cooldown.", g: "Upper Hypertrophy", gm: "DB Bench, Lat Pulldowns, and Arm supersets. 12-15 Reps." },
+      6: { c: "BRICK SESSION", ct: "60m B / 15m R", cz: "Mixed", cr: "8/10", ct2: "Bike+Run", cm: "Transition focus. Ride easy, run immediately after for 15m.", g: "Full Rest", gm: "Focus on nutrition and hydration." }
     };
 
     function showTab(idx) {
@@ -131,8 +130,9 @@
     }
 
     const today = new Date();
-    const day = today.getDay();
+    const day = today.getDay(); 
     const data = trainingData[day];
+    
     document.getElementById("day-display").innerText = today.toLocaleDateString('en-US', { weekday: 'long' }).toUpperCase();
     document.getElementById("cardio-title").innerText = data.c;
     document.getElementById("c-time").innerText = data.ct;
@@ -142,6 +142,7 @@
     document.getElementById("cardio-mission").innerText = data.cm;
     document.getElementById("gym-title").innerText = data.g;
     document.getElementById("gym-mission").innerText = data.gm;
+    
     updateClock();
   </script>
 </body>
