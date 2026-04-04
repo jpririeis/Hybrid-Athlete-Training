@@ -8,12 +8,12 @@
 <style>
   :root { --bpn-red: #ff0000; --bpn-black: #0e0e0e; --bpn-grey: #1a1a1a; --bpn-light-grey: #2d2d2d; --text: #ffffff; --muted: #888888; }
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  body { background: var(--bpn-black); color: var(--text); font-family: 'Inter', sans-serif; padding: 20px; max-width: 500px; margin: 0 auto; letter-spacing: -0.02em; }
+  body { background: var(--bpn-black); color: var(--text); font-family: 'Inter', sans-serif; padding: 20px; max-width: 500px; margin: 0 auto; }
   header { text-align: left; margin-bottom: 30px; border-left: 4px solid var(--bpn-red); padding-left: 15px; }
   h1 { font-family: 'Bebas Neue', sans-serif; font-size: 64px; line-height: 0.85; text-transform: uppercase; font-weight: 900; }
   #countdown { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--bpn-red); text-transform: uppercase; font-weight: 700; margin-top: 5px; display: block; }
   .tabs { display: flex; gap: 2px; background: var(--bpn-grey); padding: 4px; border-radius: 4px; margin-bottom: 25px; }
-  .tab-btn { background: transparent; border: none; color: var(--muted); padding: 12px; font-family: 'Inter'; font-size: 12px; font-weight: 700; cursor: pointer; flex: 1; text-transform: uppercase; }
+  .tab-btn { background: transparent; border: none; color: var(--muted); padding: 12px; font-family: 'Inter'; font-size: 11px; font-weight: 700; cursor: pointer; flex: 1; text-transform: uppercase; }
   .tab-btn.active { background: var(--bpn-light-grey); color: #fff; }
   .panel { display: none; }
   .panel.active { display: block; }
@@ -21,13 +21,12 @@
   .tag { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--bpn-red); text-transform: uppercase; font-weight: 800; margin-bottom: 8px; display: block; }
   .card-title { font-family: 'Bebas Neue', sans-serif; font-size: 32px; color: #fff; line-height: 1; margin-bottom: 12px; letter-spacing: 1px; }
   .metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; border-bottom: 1px solid var(--bpn-light-grey); padding-bottom: 15px; }
-  .metric { font-family: 'JetBrains Mono'; font-size: 10px; color: var(--muted); text-transform: uppercase; }
-  .metric b { color: var(--text); display: block; font-size: 13px; margin-top: 2px; }
-  .instruction-list { list-style: none; }
-  .instruction-list li { font-size: 12px; margin-bottom: 8px; padding-left: 12px; border-left: 1px solid var(--bpn-red); color: #ddd; }
-  .instruction-list b { color: #fff; }
-  .summary-box { background: var(--bpn-red); padding: 15px; border-radius: 2px; margin-top: 20px; }
-  .summary-row { display: flex; justify-content: space-between; font-family: 'Bebas Neue', sans-serif; font-size: 24px; color: #fff; }
+  .metric { font-family: 'JetBrains Mono'; font-size: 9px; color: var(--muted); text-transform: uppercase; }
+  .metric b { color: var(--text); display: block; font-size: 12px; margin-top: 2px; }
+  .instruction { font-size: 12px; color: #bbb; line-height: 1.5; border-left: 1px solid var(--bpn-red); padding-left: 10px; }
+  .fuel-list { list-style: none; font-size: 12px; }
+  .fuel-list li { margin-bottom: 8px; color: #ddd; }
+  .fuel-list b { color: #fff; }
   .footer-mantra { text-align: center; margin-top: 30px; font-family: 'Bebas Neue', sans-serif; font-size: 20px; color: var(--bpn-light-grey); letter-spacing: 2px; padding-bottom: 20px; }
 </style>
 </head>
@@ -45,25 +44,25 @@
 
   <div class="panel active" id="p0">
     <div style="text-align: center; margin-bottom: 15px;">
-        <span id="day-display" style="font-family: 'JetBrains Mono'; color: var(--bpn-red); font-size: 12px; font-weight: 800;">MONDAY</span>
+        <span id="day-display" style="font-family: 'JetBrains Mono'; color: var(--bpn-red); font-size: 12px; font-weight: 800;"></span>
     </div>
 
     <div class="card" style="border-left: 4px solid var(--bpn-red);">
-        <span class="tag">Session 01 // Endurance</span>
+        <span class="tag">Cardio // Endurance</span>
         <div class="card-title" id="cardio-title">--</div>
         <div class="metric-grid">
-            <div class="metric">Distance/Volume<b><span id="c-dist">--</span></b></div>
+            <div class="metric">Target Duration<b><span id="c-time">--</span></b></div>
             <div class="metric">Intensity/Zone<b><span id="c-zone">--</span></b></div>
-            <div class="metric">Duration<b><span id="c-time">--</span></b></div>
             <div class="metric">Effort (RPE)<b><span id="c-rpe">--</span></b></div>
+            <div class="metric">Type<b><span id="c-type">--</span></b></div>
         </div>
-        <p id="cardio-mission" style="font-size: 12px; color: #bbb; line-height: 1.4;"></p>
+        <p id="cardio-mission" class="instruction"></p>
     </div>
 
     <div class="card">
-        <span class="tag">Session 02 // Strength</span>
+        <span class="tag">Strength // Power</span>
         <div class="card-title" id="gym-title">--</div>
-        <p id="gym-mission" style="font-size: 13px; color: #ddd; line-height: 1.5; border-left: 1px solid var(--bpn-light-grey); padding-left: 12px;"></p>
+        <p id="gym-mission" style="font-size: 13px; color: #ddd; line-height: 1.5;"></p>
     </div>
   </div>
 
@@ -71,39 +70,38 @@
     <div class="card">
       <span class="tag">System 01 // Morning</span>
       <div class="card-title">MORNING PRIME</div>
-      <ul class="instruction-list">
+      <ul class="fuel-list">
         <li><b>300mg Alpha GPC:</b> Cognitive drive.</li>
         <li><b>1/4 tsp Salt:</b> Adrenal reset.</li>
         <li><b>1/2 tsp Mag Malate:</b> ATP fuel.</li>
       </ul>
     </div>
     <div class="card" style="border-left: 2px solid var(--bpn-red);">
-      <span class="tag">System 02 // Endurance</span>
+      <span class="tag">System 02 // Pre-Cardio</span>
       <div class="card-title">CARDIO BOOSTER</div>
-      <ul class="instruction-list">
+      <ul class="fuel-list">
         <li><b>40g Malto + 20g Fructose:</b> Glycogen fueling.</li>
-        <li><b>6g Citrulline Malate:</b> Nitric oxide.</li>
+        <li><b>6g Citrulline Malate:</b> Nitric oxide & blood flow.</li>
       </ul>
     </div>
     <div class="card">
-      <span class="tag">System 03 // Strength</span>
+      <span class="tag">System 03 // Pre-Gym</span>
       <div class="card-title">MIDDAY RESET</div>
-      <ul class="instruction-list">
+      <ul class="fuel-list">
         <li><b>5g Creatine:</b> Power output.</li>
-        <li><b>1/2 tsp Salt + 1/4 tsp Potassium:</b> Nerve fire.</li>
+        <li><b>1/2 tsp Salt + 1/4 tsp Potassium:</b> Muscle firing.</li>
       </ul>
     </div>
     <div class="card">
       <span class="tag">System 04 // Recovery</span>
       <div class="card-title">SLEEP RESET</div>
-      <ul class="instruction-list">
+      <ul class="fuel-list">
         <li><b>Mag Glycinate + L-Theanine:</b> CNS Calm.</li>
         <li><b>1 tsp Tart Cherry:</b> Inflammation flush.</li>
       </ul>
     </div>
-    <div class="summary-box">
-      <div class="summary-row"><span>Goal:</span> <span>150G Protein</span></div>
-      <div style="font-size: 10px; color: #fff; opacity: 0.9; margin-top: 5px; text-transform: uppercase; font-weight: 700;">Aim for 3,000+ Calories</div>
+    <div style="background: var(--bpn-red); padding: 15px; font-family: 'Bebas Neue'; font-size: 20px; color: #fff;">
+      GOAL: 150G PROTEIN // 3,000+ CALS
     </div>
   </div>
 
@@ -113,17 +111,18 @@
     function updateClock() {
       const race = new Date("September 11, 2026").getTime();
       const diff = race - new Date().getTime();
-      document.getElementById("countdown").innerText = Math.floor(diff / (1000 * 60 * 60 * 24)) + " DAYS TO RACE DAY";
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      document.getElementById("countdown").innerText = days + " DAYS TO RACE DAY";
     }
 
     const trainingData = {
-      0: { c: "Active Recovery", cd: "3-4 Miles", cz: "Zone 1", ct: "45m", cr: "2/10", cm: "Nasal breathing only. Flush the legs, do not build fatigue.", g: "Full Mobility", gm: "20m Hip & Ankle flow. Targeted stretching on right foot pinky-side." },
-      1: { c: "Easy Run", cd: "6-8 Miles", cz: "Zone 2", ct: "60-70m", cr: "4/10", cm: "Conversational pace. Focus on light foot-strike and mid-foot landing.", g: "Lower (Ham Focus)", gm: "RDLs (Heavy), Leg Curls, Bulgarian Split Squats (Quad focus second), 3x20 Calves." },
-      2: { c: "Swim Intervals", cd: "1200m Total", cz: "Zone 4", ct: "40m", cr: "8/10", cm: "10x50m Sprints (30s rest). High intent on the pull.", g: "Core & Stability", gm: "Heavy Goblet Squats + Plank Rows + Single Leg Deadlifts for bike balance." },
-      3: { c: "Easy Run", cd: "5 Miles", cz: "Zone 2", ct: "45m", cr: "4/10", cm: "Focus on cadence (170-180 bpm). Keep heart rate strictly below Zone 3.", g: "Upper (Push/Pull)", gm: "Bench Press, Barbell Rows, Overhead Press, Weighted Pull-ups. 5x5 Strength focus." },
-      4: { c: "Endurance Swim", cd: "2000m", cz: "Zone 2", ct: "50m", cr: "5/10", cm: "Continuous steady state. Focus on bilateral breathing and streamline efficiency.", g: "Functional Power", gm: "Kettlebell Swings, Box Jumps, and Rotational Med Ball throws." },
-      5: { c: "Tempo Run", cd: "7 Miles", cz: "Zone 4", ct: "55m", cr: "7/10", cm: "2 mile warmup, 3 miles at Half-IM pace, 2 mile cooldown.", g: "Upper Hypertrophy", gm: "Incline DB Bench, Lat Pulldowns, Facepulls, and Bicep/Tricep supersets. 12-15 Reps." },
-      6: { c: "BIG BRICK SESSION", cd: "40mi Bike / 4mi Run", cz: "Zone 3", ct: "3hrs+", cr: "9/10", cm: "The specific Ironman simulation. Practice fueling every 45 mins.", g: "Rest from Gym", gm: "Complete CNS recovery. Eat, hydrate, and prepare for Week A/B rotation." }
+      0: { c: "Easy Run", ct: "30m", cz: "Zone 2", cr: "4/10", ct2: "Running", cm: "Conversational pace. 3m run/1m walk if needed. Save the foot.", g: "Legs (Ham Focus)", gm: "RDLs, Leg Curls, and 3x20 Calves. Focus on the stretch." },
+      1: { c: "Swim Drills", ct: "30m", cz: "Technique", cr: "3/10", ct2: "Swimming", cm: "Drills only. Focus on body position. 50m intervals with 30s rest.", g: "Core & Stability", gm: "Deadbugs, Bird-Dogs, and Plank holds. Core is the foundation." },
+      2: { c: "Easy Bike", ct: "45m", cz: "Zone 2", cr: "4/10", ct2: "Cycling", cm: "Steady spin (85+ RPM). Get used to the saddle. Stay flat.", g: "Upper (Push/Pull)", gm: "Bench Press, Rows, Overhead Press, and Pull-ups. 5x5 Strength." },
+      3: { c: "Light Swim + Sauna", ct: "30m", cz: "Zone 1", cr: "2/10", ct2: "Swimming", cm: "Very easy recovery laps. 15-20m Sauna post-swim for flush.", g: "Legs (Quad Focus)", gm: "Hack Squat or Leg Press. Focus on explosive push power." },
+      4: { c: "Tempo Run", ct: "30m", cz: "Zone 3/4", cr: "7/10", ct2: "Running", cm: "10m Warmup, 15m 'Comfortably Hard', 5m Cooldown.", g: "Upper Hypertrophy", gm: "DB Bench, Lat Pulldowns, and Arm supersets. 12-15 Reps." },
+      5: { c: "BRICK SESSION", ct: "60m B / 15m R", cz: "Mixed", cr: "8/10", ct2: "Bike+Run", cm: "Transition focus. Ride easy, run immediately after for 15m.", g: "Full Rest", gm: "Zero gym volume. Focus on nutrition and hydration." },
+      6: { c: "Walk & Yoga", ct: "45m", cz: "Zone 1", cr: "1/10", ct2: "Recovery", cm: "Active recovery. Flush the legs from the Brick. Focus on foot mobility.", g: "Full Rest", gm: "Prepare for the week ahead. Go One More." }
     };
 
     function showTab(idx) {
@@ -136,10 +135,10 @@
     const data = trainingData[day];
     document.getElementById("day-display").innerText = today.toLocaleDateString('en-US', { weekday: 'long' }).toUpperCase();
     document.getElementById("cardio-title").innerText = data.c;
-    document.getElementById("c-dist").innerText = data.cd;
-    document.getElementById("c-zone").innerText = data.cz;
     document.getElementById("c-time").innerText = data.ct;
+    document.getElementById("c-zone").innerText = data.cz;
     document.getElementById("c-rpe").innerText = data.cr;
+    document.getElementById("c-type").innerText = data.ct2;
     document.getElementById("cardio-mission").innerText = data.cm;
     document.getElementById("gym-title").innerText = data.g;
     document.getElementById("gym-mission").innerText = data.gm;
