@@ -20,17 +20,20 @@
   .card { background: var(--bpn-grey); border-radius: 2px; padding: 20px; margin-bottom: 12px; border-top: 1px solid var(--bpn-light-grey); }
   .tag { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--bpn-red); text-transform: uppercase; font-weight: 800; margin-bottom: 8px; display: block; }
   .card-title { font-family: 'Bebas Neue', sans-serif; font-size: 32px; color: #fff; line-height: 1; margin-bottom: 5px; letter-spacing: 1px; }
-  .timing { font-family: 'JetBrains Mono'; font-size: 10px; color: var(--bpn-red); margin-bottom: 15px; display: block; }
   .metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; border-bottom: 1px solid var(--bpn-light-grey); padding-bottom: 15px; }
   .metric { font-family: 'JetBrains Mono'; font-size: 9px; color: var(--muted); text-transform: uppercase; }
   .metric b { color: var(--text); display: block; font-size: 12px; margin-top: 2px; }
   .instruction { font-size: 12px; color: #bbb; line-height: 1.5; border-left: 1px solid var(--bpn-red); padding-left: 10px; }
   .fuel-table { width: 100%; border-collapse: collapse; margin-bottom: 15px; }
   .fuel-table tr { border-bottom: 1px solid rgba(255,255,255,0.05); }
-  .fuel-table td { padding: 8px 0; font-size: 12px; }
-  .fuel-table td:last-child { text-align: right; color: var(--muted); font-family: 'JetBrains Mono'; font-size: 10px; }
-  .fuel-table b { color: #fff; display: block; font-size: 13px; }
-  .benefit-tag { font-size: 11px; color: #888; font-style: italic; display: block; margin-top: 5px; }
+  .fuel-table td { padding: 10px 0; font-size: 12px; }
+  .fuel-table td:last-child { text-align: right; color: var(--text); font-family: 'JetBrains Mono'; font-size: 11px; font-weight: 700; }
+  .fuel-table b { color: #fff; display: block; font-size: 13px; font-weight: 700; }
+  .vol-box { background: var(--bpn-red); padding: 15px; border-radius: 2px; margin-top: 20px; }
+  .vol-title { font-family: 'Bebas Neue'; font-size: 20px; color: #fff; border-bottom: 1px solid rgba(255,255,255,0.3); margin-bottom: 10px; }
+  .vol-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; }
+  .vol-item { font-family: 'JetBrains Mono'; font-size: 10px; color: #fff; }
+  .vol-item b { display: block; font-size: 14px; }
   .footer-mantra { text-align: center; margin-top: 30px; font-family: 'Bebas Neue', sans-serif; font-size: 20px; color: var(--bpn-light-grey); letter-spacing: 2px; padding-bottom: 20px; text-transform: uppercase; }
 </style>
 </head>
@@ -64,51 +67,56 @@
     <div class="card">
         <span class="tag">Strength // Power</span>
         <div class="card-title" id="gym-title">--</div>
-        <p id="gym-mission" style="font-size: 13px; color: #ddd; line-height: 1.5;"></p>
+        <div id="gym-mission" style="font-size: 12px; color: #ddd; line-height: 1.5;"></div>
+    </div>
+
+    <div class="vol-box">
+        <div class="vol-title">WEEKLY VOLUME TARGETS</div>
+        <div class="vol-grid">
+            <div class="vol-item">RUN<b>~11 MI</b></div>
+            <div class="vol-item">BIKE<b>~28 MI</b></div>
+            <div class="vol-item">SWIM<b>~1500M</b></div>
+        </div>
     </div>
   </div>
 
   <div class="panel" id="p1">
     <div class="card">
-      <span class="tag">System 01</span>
+      <span class="tag">System 01 // Morning</span>
       <div class="card-title">MORNING PRIME</div>
-      <span class="timing">Immediate Waking</span>
       <table class="fuel-table">
-        <tr><td><b>300mg Alpha GPC</b>Mental drive/Focus</td><td>Neuro</td></tr>
-        <tr><td><b>1/4 tsp Salt</b>Adrenal support</td><td>Salt</td></tr>
-        <tr><td><b>1/2 tsp Mag Malate</b>ATP energy production</td><td>Energy</td></tr>
+        <tr><td><b>Alpha GPC</b>Focus / Brain</td><td>300mg</td></tr>
+        <tr><td><b>Himalayan Salt</b>Adrenal Reset</td><td>1/4 tsp</td></tr>
+        <tr><td><b>Magnesium Malate</b>ATP Energy</td><td>1/2 tsp</td></tr>
       </table>
     </div>
     <div class="card" style="border-left: 2px solid var(--bpn-red);">
-      <span class="tag">System 02</span>
+      <span class="tag">System 02 // Cardio</span>
       <div class="card-title">CARDIO BOOSTER</div>
-      <span class="timing">Pre / Intra Session</span>
       <table class="fuel-table">
-        <tr><td><b>40g Malto + 20g Fructose</b>2:1 Carb ratio</td><td>Fuel</td></tr>
-        <tr><td><b>6g Citrulline Malate</b>Nitric Oxide/Blood flow</td><td>O2</td></tr>
+        <tr><td><b>Maltodextrin</b>Primary Glucose</td><td>40g</td></tr>
+        <tr><td><b>Fructose</b>Secondary Carb</td><td>20g</td></tr>
+        <tr><td><b>Citrulline Malate</b>Nitric Oxide</td><td>6g</td></tr>
       </table>
     </div>
     <div class="card">
-      <span class="tag">System 03</span>
+      <span class="tag">System 03 // Lifting</span>
       <div class="card-title">MIDDAY RESET</div>
-      <span class="timing">30m Before Gym (Pills + Drink)</span>
       <table class="fuel-table">
-        <tr><td><b>600mg KSM-66 (Pill)</b>Cortisol drop/Muscle repair</td><td>Protect</td></tr>
-        <tr><td><b>1.5g L-Tyrosine (Pill)</b>Dopamine/Sales focus</td><td>Drive</td></tr>
-        <tr><td><b>5g Creatine + Electrolytes</b>Water in cell/Nerve fire</td><td>Hydrate</td></tr>
+        <tr><td><b>KSM-66 (Pill)</b>Cortisol/Muscle</td><td>600mg</td></tr>
+        <tr><td><b>L-Tyrosine (Pill)</b>Sales Focus</td><td>1.5g</td></tr>
+        <tr><td><b>Creatine Mono</b>Power / ATP</td><td>5g</td></tr>
+        <tr><td><b>Salt + Potassium</b>Nerve Firing</td><td>1/2+1/4 tsp</td></tr>
       </table>
     </div>
     <div class="card">
-      <span class="tag">System 04</span>
+      <span class="tag">System 04 // Sleep</span>
       <div class="card-title">SLEEP RESET</div>
-      <span class="timing">45m Before Bed</span>
       <table class="fuel-table">
-        <tr><td><b>Mag Glycinate + Theanine</b>CNS Relaxation</td><td>Calm</td></tr>
-        <tr><td><b>1 tsp Tart Cherry</b>Melatonin/Anti-Inflammatory</td><td>Repair</td></tr>
+        <tr><td><b>Magnesium Glycinate</b>Deep REM</td><td>400mg</td></tr>
+        <tr><td><b>L-Theanine</b>CNS Calm</td><td>200mg</td></tr>
+        <tr><td><b>Tart Cherry</b>Recovery Flush</td><td>1 tsp</td></tr>
       </table>
-    </div>
-    <div style="background: var(--bpn-red); padding: 15px; font-family: 'Bebas Neue'; font-size: 20px; color: #fff;">
-      150G PROTEIN // 3,000+ CALS
     </div>
   </div>
 
@@ -123,13 +131,13 @@
     }
 
     const trainingData = {
-      0: { c: "Walk & Yoga", ct: "45m", cd: "2.5-3.0 Mi", cz: "Zone 1", cr: "1/10", cm: "Active recovery. Flush the legs. Focus on foot mobility.", g: "Full Rest", gm: "Prepare for the week ahead." },
-      1: { c: "Easy Run", ct: "30m", cz: "Zone 2", cr: "4/10", cm: "Conversational pace. 3m run/1m walk if needed. Save the foot.", g: "Legs (Ham Focus)", gm: "RDLs, Leg Curls, and 3x20 Calves. Focus on the stretch." },
-      2: { c: "Swim Drills", ct: "30m", cd: "750-1000m", cz: "Technique", cr: "3/10", cm: "Drills only. 50m intervals with 30s rest. Focus on position.", g: "Core & Stability", gm: "Deadbugs, Bird-Dogs, and Plank holds. Core foundation." },
-      3: { c: "Easy Bike", ct: "45m", cd: "11-13 Mi", cz: "Zone 2", cr: "4/10", cm: "Steady spin (85+ RPM). Get used to the saddle. Stay flat.", g: "Upper (Push/Pull)", gm: "Bench, Rows, OHP, and Pull-ups. 5x5 Strength focus." },
-      4: { c: "Light Swim + Sauna", ct: "30m", cz: "Zone 1", cr: "2/10", cm: "Easy recovery laps. 15-20m Sauna post-swim for flush.", g: "Legs (Quad Focus)", gm: "Hack Squat or Leg Press. Focus on explosive push power." },
-      5: { c: "Tempo Run", ct: "30m", cz: "Zone 3/4", cr: "7/10", cm: "10m Warmup, 15m 'Comfortably Hard', 5m Cooldown.", g: "Upper Hypertrophy", gm: "DB Bench, Lat Pulldowns, and Arm supersets. 12-15 Reps." },
-      6: { c: "BRICK SESSION", ct: "60m B / 15m R", cd: "15 Mi B / 1.5 Mi R", cz: "Mixed", cr: "8/10", cm: "Transition focus. Ride easy, run immediately after for 15m.", g: "Full Rest", gm: "Focus on nutrition and hydration." }
+      0: { c: "Walk & Yoga", ct: "45m", cd: "2.5 Mi", cz: "Zone 1", cr: "1/10", cm: "Active recovery. Flush legs.", g: "Full Rest", gm: "Prepare for the week ahead." },
+      1: { c: "Easy Run", ct: "30m", cd: "2.5 Mi", cz: "Zone 2", cr: "4/10", cm: "Conversational pace.", g: "Legs (Ham Focus)", gm: "<b>A. RDLs:</b> 4x8-10<br><b>B. Leg Curls:</b> 3x12-15<br><b>C. Calf Raises:</b> 4x20<br><b>D. Glute Bridges:</b> 3x15" },
+      2: { c: "Swim Drills", ct: "30m", cd: "750m", cz: "Tech", cr: "3/10", cm: "50m intervals.", g: "Core & Stability", gm: "<b>A. Planks:</b> 3x60s<br><b>B. Deadbugs:</b> 3x12<br><b>C. Bird-Dogs:</b> 3x12<br><b>D. Hanging Leg Raises:</b> 3x10" },
+      3: { c: "Easy Bike", ct: "45m", cd: "12 Mi", cz: "Zone 2", cr: "4/10", cm: "Steady spin.", g: "Upper (Chest Lead)", gm: "<b>A. Flat Bench:</b> 4x6-8<br><b>B. Weighted Pull-ups:</b> 4xMax<br><b>C. Weighted Dips:</b> 3x10-12<br><b>D. Barbell Rows:</b> 4x8-10" },
+      4: { c: "Light Swim + Sauna", ct: "30m", cd: "750m", cz: "Zone 1", cr: "2/10", cm: "Sauna 15m post-swim.", g: "Legs (Quad Focus)", gm: "<b>A. Hack Squat:</b> 4x8-10<br><b>B. Leg Press:</b> 3x12-15<br><b>C. Single Leg Lunges:</b> 3x10/side<br><b>D. Calf Raises:</b> 4x20" },
+      5: { c: "Tempo Run", ct: "30m", cd: "3.5 Mi", cz: "Zone 3/4", cr: "7/10", cm: "10m Warm, 15m Tempo, 5m Cool.", g: "Upper (Back Lead)", gm: "<b>A. Pendlay Rows:</b> 4x8-10<br><b>B. Incline DB Bench:</b> 4x10-12<br><b>C. Weighted Pull-ups:</b> 3xMax<br><b>D. Dips:</b> 3xMax Reps" },
+      6: { c: "BRICK SESSION", ct: "60m B / 15m R", cd: "15Mi B / 1.5Mi R", cz: "Mixed", cr: "8/10", cm: "Transition practice.", g: "Full Rest", gm: "Recovery focus." }
     };
 
     function showTab(idx) {
@@ -149,7 +157,7 @@
     document.getElementById("c-rpe").innerText = data.cr;
     document.getElementById("cardio-mission").innerText = data.cm;
     document.getElementById("gym-title").innerText = data.g;
-    document.getElementById("gym-mission").innerText = data.gm;
+    document.getElementById("gym-mission").innerHTML = data.gm;
     
     updateClock();
   </script>
