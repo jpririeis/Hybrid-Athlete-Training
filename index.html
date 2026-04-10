@@ -60,7 +60,7 @@
 
   /* Calendar Styles */
   .cal-row { display: grid; grid-template-columns: 40px 1fr; margin-bottom: 5px; border-radius: 3px; overflow: hidden; background: var(--bpn-grey); }
-  .cal-wk { display: flex; align-items: center; justify-content: center; font-family: 'Bebas Neue'; font-size: 18px; color: #000; }
+  .cal-wk { display: flex; align-items: center; justify-content: center; font-family: 'Bebas Neue'; font-size: 18px; color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
   .cal-details { padding: 10px; }
   .cal-title { font-family: 'JetBrains Mono'; font-size: 10px; font-weight: 800; text-transform: uppercase; color: #fff; margin-bottom: 3px; }
   .cal-stats { font-size: 10px; color: #aaa; }
@@ -80,7 +80,7 @@
       <span class="phase-name" id="phase-name">PHASE: BASE</span>
       <span class="phase-obj" id="phase-obj">Build the Chassis.</span>
     </div>
-    <select id="week-select" onchange="updateWeek()"></select>
+    <select id="week-select" onchange="updateWeekDropdown()"></select>
   </div>
 
   <div class="tabs">
@@ -112,7 +112,7 @@
     </div>
 
     <div class="vol-box">
-      <div class="vol-title" id="vol-title">AVERAGE WEEKLY VOLUME</div>
+      <div class="vol-title" id="vol-title">ESTIMATED VOLUME</div>
       <div class="vol-grid">
           <div class="vol-item">RUN<b id="vol-run">-- MI</b></div>
           <div class="vol-item">BIKE<b id="vol-bike">-- MI</b></div>
@@ -207,24 +207,34 @@
     // --- 1. CONFIG & BASELINES ---
     const CONFIG = {
       scalingFactor: 1.10, // 10% increase per week
-      deloadDrop: 0.75,    // 25% drop
+      deloadDrop: 0.75,    // 25% drop for recovery weeks
+      // Specific daily starting targets
       base: {
-        runDist: 3.1,
-        bikeDist: 12.0,
-        swimVol: 400
+        runDistLong: 3.1, 
+        runDistEasy: 2.0, 
+        runDistBrick: 1.5, 
+        bikeDistLong: 12.0, 
+        bikeDistEasy: 8.5,  
+        swimVol: 400      
+      },
+      // Weekly Totals for the HUD Calculation
+      weeklyBase: {
+        runTotal: 6.6, 
+        bikeTotal: 20.5, 
+        swimTotal: 800 
       }
     };
 
-    // --- 2. PHASE LOGIC ---
+    // --- 2. PHASE & REDLINE COLOR LOGIC ---
     function getPhaseDetails(wk) {
       const deloads = [4, 8, 12, 16];
       if (deloads.includes(wk)) {
-        return { name: "Deload", color: "#9CA3AF", obj: "Flush System. Neutral week.", isDeload: true };
+        return { name: "Deload", color: "#404040", obj: "Flush System. Neutral week.", isDeload: true }; // Charcoal
       }
-      if (wk <= 8) return { name: "Base", color: "#3B82F6", obj: "Build Chassis. Form & Zone 2.", isDeload: false };
-      if (wk <= 15) return { name: "Build", color: "#EAB308", obj: "Engine Room. Push Tempo.", isDeload: false };
-      if (wk <= 18) return { name: "Peak", color: "#EF4444", obj: "Race Ready. Long Simulation.", isDeload: false };
-      return { name: "Taper", color: "#22C55E", obj: "Find Snap. Cut volume.", isDeload: false };
+      if (wk <= 8) return { name: "Base", color: "#737373", obj: "Build Chassis. Form & Zone 2.", isDeload: false }; // Slate Grey
+      if (wk <= 15) return { name: "Build", color: "#990000", obj: "Engine Room. Push Tempo.", isDeload: false }; // Dark Red
+      if (wk <= 18) return { name: "Peak", color: "#ff0000", obj: "Race Ready. Long Simulation.", isDeload: false }; // BPN Red
+      return { name: "Taper", color: "#ffffff", obj: "Find Snap. Cut volume.", isDeload: false }; // White
     }
 
     // --- 3. WEEKLY PLAN GENERATOR ---
@@ -233,9 +243,15 @@
       let scale = Math.pow(CONFIG.scalingFactor, wk - 1);
       if (phase.isDeload) scale = scale * CONFIG.deloadDrop;
 
-      const rDist = (CONFIG.base.runDist * scale).toFixed(1);
-      const bDist = (CONFIG.base.bikeDist * scale).toFixed(1);
-      const sVol = Math.round((CONFIG.base.swimVol * scale) / 50) * 50;
+      // Scale Individual Daily Distances
+      const rTempo = (CONFIG.base.runDistLong * scale).toFixed(1);
+      const rEasy = (CONFIG.base.runDistEasy * scale).toFixed(1);
+      const rBrick = (CONFIG.base.runDistBrick * scale).toFixed(1);
+      
+      const bLong = (CONFIG.base.bikeDistLong * scale).toFixed(1);
+      const bEasy = Math.round(45 * scale); // Scale the time for Wednesday
+      
+      const sVol = Math.round((CONFIG.base.swimVol * scale) / 50) * 50; // Daily swim vol
 
       const formatGym = (isDeload, normalMission) => {
         return isDeload ? "<b style='color:var(--bpn-red);'>[DELOAD]</b> Cut working sets by 50%. Focus strictly on mobility and form. Do not chase heavy numbers today." : normalMission;
@@ -246,19 +262,20 @@
         days: [
           { cTitle: "Active Recovery", cDist: "Walk or Light Row", cZone: "Zone 1", cMind: "Active recovery. Flush legs.", sTitle: phase.isDeload ? "Full Rest" : "Mobility & Flush", sMind: "<b>A. Couch Stretch:</b> 2m/leg<br><b>B. Pigeon Pose:</b> 2m/leg<br><b>C. Cat-Cow:</b> 20 reps" },
           { cTitle: "Swim Intervals", cDist: `${sVol/4} x 100yd Chunks`, cZone: "Moderate", cMind: "Keep lats fresh for tomorrow. Light kick.", sTitle: phase.isDeload ? "Lower Pull (Light)" : "Legs (Ham Focus)", sMind: formatGym(phase.isDeload, "<b>A. RDLs:</b> 4x8-10<br><b>B. Hamstring Curls:</b> 3x12-15<br><b>C. Tibialis Raises:</b> 3x20 (Shin Armor)<br><b>D. Deadbugs:</b> 3x15") },
-          { cTitle: "Endurance Run", cDist: `${(rDist * 0.6).toFixed(1)} Miles`, cZone: "12:30-13:30/mi (Zone 2)", cMind: "Time on feet. Focus on nasal breathing and posture.", sTitle: phase.isDeload ? "Core (15 min)" : "Full Body & Core", sMind: formatGym(phase.isDeload, "<b>A. Farmers Carries:</b> 4x40 yards (Heavy)<br><b>B. Bird-Dogs:</b> 3x10/side<br><b>C. Plank w/ Reach:</b> 3x60s<br><b>D. Reverse Curls:</b> 3x12") },
-          { cTitle: "Aerobic Bike", cDist: `45 Mins`, cZone: "11-12 mph (Zone 2)", cMind: "Steady spin. Flush the legs out.", sTitle: phase.isDeload ? "Upper Push (Light)" : "Upper (Chest Lead)", sMind: formatGym(phase.isDeload, "<b>A. Flat Bench:</b> 4x6-8<br><b>B. Incline DB Bench:</b> 4x10-12<br><b>C. Dips:</b> 3xMax (Tricep Focus)<br><b>D. Hammer Curls:</b> 3x12") },
-          { cTitle: "Swim Sprints", cDist: `${sVol/50} x 50yd Chunks`, cZone: "High Efficiency", cMind: "Hydro-recovery for the legs. 50m intervals.", sTitle: phase.isDeload ? "Lower Push (Light)" : "Legs (Quad Focus)", sMind: formatGym(phase.isDeload, "<b style='color:var(--bpn-red);'>*Pre-Lift:</b> Pogo Jumps 3x20s / Depth Drops 3x5<br><b>A. Hack Squat:</b> 4x8-10<br><b>B. Leg Press:</b> 3x12-15<br><b>C. Walking Lunges:</b> 3x10/side") },
-          { cTitle: "Tempo Run", cDist: `${rDist} Miles`, cZone: "11:15/mi (Zone 3/4)", cMind: "Check foot pain levels. Find race pace.", sTitle: phase.isDeload ? "Upper Back (Light)" : "Upper (Back Lead)", sMind: formatGym(phase.isDeload, "<b>A. Pendlay Rows:</b> 4x8-10<br><b>B. Weighted Pull-ups:</b> 4xMax<br><b>C. Lat Pulldowns:</b> 3x12-15<br><b>D. Tricep Pushdowns:</b> 3x15") },
-          { cTitle: phase.isDeload ? "Long Bike" : "BRICK SESSION", cDist: phase.isDeload ? `${bDist} Miles` : `${bDist} Mi Bike / 1.5 Mi Run`, cZone: "Zone 2", cMind: "Aerobic base building. Practice Transition.", sTitle: phase.isDeload ? "Mobility" : "Chassis Armor", sMind: formatGym(phase.isDeload, "<b>A. Single-Leg RDLs:</b> 3x10/side<br><b>B. Heavy Soleus Raises:</b> 4x15<br><b>C. Banded Clamshells:</b> 3x20/side") }
+          { cTitle: "Endurance Run", cDist: `${rEasy} Miles`, cZone: "12:30-13:30/mi (Zone 2)", cMind: "Time on feet. Focus on nasal breathing and posture.", sTitle: phase.isDeload ? "Core (15 min)" : "Full Body & Core", sMind: formatGym(phase.isDeload, "<b>A. Farmers Carries:</b> 4x40 yards (Heavy)<br><b>B. Bird-Dogs:</b> 3x10/side<br><b>C. Plank w/ Reach:</b> 3x60s<br><b>D. Reverse Curls:</b> 3x12") },
+          { cTitle: "Aerobic Bike", cDist: `${bEasy} Mins`, cZone: "11-12 mph (Zone 2)", cMind: "Steady spin. Flush the legs out.", sTitle: phase.isDeload ? "Upper Push (Light)" : "Upper (Chest Lead)", sMind: formatGym(phase.isDeload, "<b>A. Flat Bench:</b> 4x6-8<br><b>B. Incline DB Bench:</b> 4x10-12<br><b>C. Dips:</b> 3xMax (Tricep Focus)<br><b>D. Hammer Curls:</b> 3x12") },
+          { cTitle: "Swim Sprints", cDist: `${sVol/50} x 50yd Chunks`, cZone: "High Efficiency", cMind: "Hydro-recovery for the legs. 50m intervals.", sTitle: phase.isDeload ? "Lower Push (Light)" : "Legs (Quad Focus)", sMind: formatGym(phase.isDeload, "<b style='color:var(--bpn-red);'>*Pre-Lift:</b> Pogo Jumps 3x20s / Depth Drops 3x5<br><b>A. Hack squat:</b> 4x8-10<br><b>B. Leg Press:</b> 3x12-15<br><b>C. Walking Lunges:</b> 3x10/side") },
+          { cTitle: "Tempo Run", cDist: `${rTempo} Miles`, cZone: "11:15/mi (Zone 3/4)", cMind: "Check foot pain levels. Find race pace.", sTitle: phase.isDeload ? "Upper Back (Light)" : "Upper (Back Lead)", sMind: formatGym(phase.isDeload, "<b>A. Pendlay Rows:</b> 4x8-10<br><b>B. Weighted Pull-ups:</b> 4xMax<br><b>C. Lat Pulldowns:</b> 3x12-15<br><b>D. Tricep Pushdowns:</b> 3x15") },
+          { cTitle: phase.isDeload ? "Long Bike" : "BRICK SESSION", cDist: phase.isDeload ? `${bLong} Miles` : `${bLong} Mi Bike / ${rBrick} Mi Run`, cZone: "Zone 2", cMind: "Aerobic base building. Practice Transition.", sTitle: phase.isDeload ? "Mobility" : "Chassis Armor", sMind: formatGym(phase.isDeload, "<b>A. Single-Leg RDLs:</b> 3x10/side<br><b>B. Heavy Soleus Raises:</b> 4x15<br><b>C. Banded Clamshells:</b> 3x20/side") }
         ]
       };
     }
 
-    // --- 4. UI LOGIC ---
+    // --- 4. UI LOGIC & AUTO DATE SYNC ---
     let currentWeek = 1;
 
     function initUI() {
+      // 1. Setup Dropdown Options
       const sel = document.getElementById("week-select");
       for(let i=1; i<=20; i++) {
         const opt = document.createElement("option");
@@ -267,29 +284,57 @@
         sel.appendChild(opt);
       }
       
-      const race = new Date("September 11, 2026").getTime();
-      const diff = race - new Date().getTime();
-      const days = Math.max(0, Math.floor(diff / (1000 * 60 * 60 * 24)));
+      // 2. Calculate Race Day Math
+      const raceDate = new Date("September 11, 2026").getTime();
+      const today = new Date().getTime();
+      const msPerWeek = 1000 * 60 * 60 * 24 * 7;
+      
+      // Update Countdown Timer
+      const days = Math.max(0, Math.floor((raceDate - today) / (1000 * 60 * 60 * 24)));
       document.getElementById("countdown").innerText = days + " DAYS TO RACE DAY";
       
+      // 3. Auto-Sync Current Week based on Today's Date
+      // 20 weeks before Sept 11, 2026 is April 24, 2026.
+      const startDate = raceDate - (20 * msPerWeek); 
+      
+      if (today < startDate) {
+          currentWeek = 1; // Training hasn't officially started yet
+      } else {
+          // Calculate how many weeks have passed since start date
+          currentWeek = Math.floor((today - startDate) / msPerWeek) + 1;
+      }
+      
+      // Cap it between 1 and 20
+      if (currentWeek > 20) currentWeek = 20;
+      if (currentWeek < 1) currentWeek = 1;
+
+      // Set the dropdown to the auto-calculated week
+      sel.value = currentWeek;
+
+      // Render the UI
       buildCalendar();
-      updateWeek();
+      updateDashboard(currentWeek);
     }
 
-    function updateWeek() {
-      currentWeek = parseInt(document.getElementById("week-select").value);
-      const plan = getWeeklyPlan(currentWeek);
+    function updateWeekDropdown() {
+      // Triggered manually if you change the dropdown
+      const selectedWeek = parseInt(document.getElementById("week-select").value);
+      updateDashboard(selectedWeek);
+    }
+
+    function updateDashboard(weekNum) {
+      const plan = getWeeklyPlan(weekNum);
       
-      // Calculate Dynamic Weekly Volume
-      const isDeload = [4, 8, 12, 16].includes(currentWeek);
-      let scale = Math.pow(CONFIG.scalingFactor, currentWeek - 1);
+      // Calculate Dynamic Weekly Volume based on true starting totals
+      const isDeload = [4, 8, 12, 16].includes(weekNum);
+      let scale = Math.pow(CONFIG.scalingFactor, weekNum - 1);
       if (isDeload) scale = scale * CONFIG.deloadDrop;
       
-      const weeklyRun = (11.0 * scale).toFixed(1);
-      const weeklyBike = (28.0 * scale).toFixed(1);
-      const weeklySwim = Math.round((1500 * scale) / 50) * 50;
+      const weeklyRun = (CONFIG.weeklyBase.runTotal * scale).toFixed(1);
+      const weeklyBike = (CONFIG.weeklyBase.bikeTotal * scale).toFixed(1);
+      const weeklySwim = Math.round((CONFIG.weeklyBase.swimTotal * scale) / 50) * 50;
 
-      // Update Phase Header
+      // Update Phase Header (Applies the Redline Colors)
       document.getElementById("phase-name").innerText = `PHASE: ${plan.phase.name}`;
       document.getElementById("phase-name").style.color = plan.phase.color;
       document.getElementById("phase-obj").innerText = plan.phase.obj;
@@ -306,8 +351,8 @@
       document.getElementById("gym-title").innerText = todayData.sTitle;
       document.getElementById("gym-mission").innerHTML = todayData.sMind;
 
-      // Update Weekly Volume Box
-      document.getElementById("vol-title").innerText = `WEEK ${currentWeek} VOLUME TARGETS`;
+      // Update Weekly Volume Box Header & Data
+      document.getElementById("vol-title").innerText = `WEEK ${weekNum} ESTIMATED VOLUME`;
       document.getElementById("vol-run").innerText = `~${weeklyRun} MI`;
       document.getElementById("vol-bike").innerText = `~${weeklyBike} MI`;
       document.getElementById("vol-swim").innerText = `~${weeklySwim} YD`;
@@ -328,7 +373,7 @@
         row.innerHTML = `
           <div class="cal-wk" style="background:${p.phase.color};">W${i}</div>
           <div class="cal-details">
-            <div class="cal-title">${p.phase.name} PHASE</div>
+            <div class="cal-title" style="color:${p.phase.color};">${p.phase.name} PHASE</div>
             <div class="cal-stats"><b>Bike:</b> ${sat.cDist} | <b>Run:</b> ${fri.cDist}</div>
           </div>
         `;
@@ -344,6 +389,7 @@
       document.getElementById('tab' + idNum).classList.add('active');
     }
 
+    // Fire it up
     initUI();
   </script>
 </body>
