@@ -51,6 +51,13 @@
   .data-table td:last-child { text-align: right; color: var(--text); font-family: 'JetBrains Mono'; font-size: 11px; font-weight: 700; }
   .data-table b { color: #fff; display: block; font-size: 13px; font-weight: 700; }
   
+  /* Volume Targets Box */
+  .vol-box { background: var(--bpn-red); padding: 15px; border-radius: 2px; margin-top: 20px; }
+  .vol-title { font-family: 'Bebas Neue'; font-size: 20px; color: #fff; border-bottom: 1px solid rgba(255,255,255,0.3); margin-bottom: 10px; }
+  .vol-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; }
+  .vol-item { font-family: 'JetBrains Mono'; font-size: 10px; color: #fff; }
+  .vol-item b { display: block; font-size: 14px; }
+
   /* Calendar Styles */
   .cal-row { display: grid; grid-template-columns: 40px 1fr; margin-bottom: 5px; border-radius: 3px; overflow: hidden; background: var(--bpn-grey); }
   .cal-wk { display: flex; align-items: center; justify-content: center; font-family: 'Bebas Neue'; font-size: 18px; color: #000; }
@@ -103,6 +110,15 @@
         <div class="card-title" id="gym-title">--</div>
         <div id="gym-mission" style="font-size: 12px; color: #ddd; line-height: 1.5;"></div>
     </div>
+
+    <div class="vol-box">
+      <div class="vol-title" id="vol-title">AVERAGE WEEKLY VOLUME</div>
+      <div class="vol-grid">
+          <div class="vol-item">RUN<b id="vol-run">-- MI</b></div>
+          <div class="vol-item">BIKE<b id="vol-bike">-- MI</b></div>
+          <div class="vol-item">SWIM<b id="vol-swim">-- YD</b></div>
+      </div>
+    </div>
   </div>
 
   <div class="panel" id="p2">
@@ -113,10 +129,10 @@
     <div class="card" style="border-left: 2px solid var(--bpn-red);">
       <span class="tag">Protocol 01 // Pre-Lift</span>
       <div class="card-title">IMPACT ARMOR (PLYOS)</div>
-      <p class="instruction" style="margin-bottom: 10px;">Execute 2x a week before strength sessions to build tendon stiffness and force absorption.</p>
+      <p class="instruction" style="margin-bottom: 10px;">Execute 2x a week before lower body sessions to build tendon stiffness.</p>
       <table class="data-table">
-        <tr><td><b>Pogo Jumps</b>Stiff ankles, quick ground contact</td><td>3 x 20s</td></tr>
-        <tr><td><b>Depth Drops</b>Step off box, stick the landing</td><td>3 x 5</td></tr>
+        <tr><td><b>Pogo Jumps</b>Stiff ankles, quick contact</td><td>3 x 20s</td></tr>
+        <tr><td><b>Depth Drops</b>Step off box, stick landing</td><td>3 x 5</td></tr>
         <tr><td><b>Broad Jumps</b>Max horizontal power</td><td>3 x 5</td></tr>
       </table>
     </div>
@@ -124,7 +140,7 @@
     <div class="card">
       <span class="tag">Protocol 02 // Pre-Hab</span>
       <div class="card-title">LOWER LEG RESILIENCE</div>
-      <p class="instruction" style="margin-bottom: 10px;">Perform on active recovery days to combat shin splints and Achilles tendonitis.</p>
+      <p class="instruction" style="margin-bottom: 10px;">Combat shin splints and Achilles tendonitis.</p>
       <table class="data-table">
         <tr><td><b>Tibialis Raises</b>Wall leans, pull toes up</td><td>3 x 20</td></tr>
         <tr><td><b>Seated Soleus Raises</b>Heavy weight on knees</td><td>4 x 15</td></tr>
@@ -136,7 +152,7 @@
     <div class="card">
       <span class="tag">Protocol 03 // Post-Ride</span>
       <div class="card-title">POST-BIKE FLUSH</div>
-      <p class="instruction" style="margin-bottom: 10px;">Immediate sequence after 10+ miles in the saddle to prevent lower back and hip lockdown.</p>
+      <p class="instruction" style="margin-bottom: 10px;">Immediate sequence after long rides to prevent hip lockdown.</p>
       <table class="data-table">
         <tr><td><b>Couch Stretch</b>Open hip flexors</td><td>2 min/leg</td></tr>
         <tr><td><b>Pigeon Pose</b>Glute and piriformis release</td><td>2 min/leg</td></tr>
@@ -221,60 +237,20 @@
       const bDist = (CONFIG.base.bikeDist * scale).toFixed(1);
       const sVol = Math.round((CONFIG.base.swimVol * scale) / 50) * 50;
 
+      const formatGym = (isDeload, normalMission) => {
+        return isDeload ? "<b style='color:var(--bpn-red);'>[DELOAD]</b> Cut working sets by 50%. Focus strictly on mobility and form. Do not chase heavy numbers today." : normalMission;
+      };
+
       return {
         phase: phase,
         days: [
-          // 0: Sunday
-          { 
-            cTitle: "Active Recovery", cDist: "Walk or Light Row", cZone: "Zone 1", 
-            cMind: "Recover.", 
-            sTitle: phase.isDeload ? "Full Rest" : "Mobility & Posterior Flush", 
-            sMind: "See Protocol 03 in Armor Tab." 
-          },
-          // 1: Monday
-          { 
-            cTitle: "Swim Intervals", cDist: `${sVol/4} x 100yd Chunks`, cZone: "Moderate", 
-            cMind: phase.isDeload ? "Relax. Light movement." : "Keep lats fresh for tomorrow.", 
-            sTitle: phase.isDeload ? "Lower Pull (Light)" : "Lower Body Pull", 
-            sMind: "Focus: Hams/Glutes. + Protocol 02 (Armor Tab)." 
-          },
-          // 2: Tuesday
-          { 
-            cTitle: "Endurance Run", cDist: `${(rDist * 0.6).toFixed(1)} Miles`, cZone: "12:30-13:30/mi (Zone 2)", 
-            cMind: "Time on feet. Posture check.", 
-            sTitle: phase.isDeload ? "Core (15 min)" : "Full Body & Core", 
-            sMind: "Focus: Anti-rotational stability." 
-          },
-          // 3: Wednesday
-          { 
-            cTitle: "Aerobic Bike", cDist: `45 Mins`, cZone: "11-12 mph (Zone 2)", 
-            cMind: "Steady. Flush the legs out.", 
-            sTitle: phase.isDeload ? "Upper Push (Light)" : "Upper Body (Chest)", 
-            sMind: "Focus: Push" 
-          },
-          // 4: Thursday
-          { 
-            cTitle: "Swim Sprints", cDist: `${sVol/50} x 50yd Chunks`, cZone: "High Efficiency", 
-            cMind: "Hydro-recovery for the legs.", 
-            sTitle: phase.isDeload ? "Lower Push (Light)" : "Lower Body Push", 
-            sMind: "Focus: Squats/Quads. Start with Protocol 01 (Armor Tab)." 
-          },
-          // 5: Friday
-          { 
-            cTitle: "Tempo Run", cDist: `${rDist} Miles`, cZone: "11:15/mi (Zone 3/4)", 
-            cMind: phase.isDeload ? "Easy pace today." : "Push. Find race pace.", 
-            sTitle: phase.isDeload ? "Upper Back (Light)" : "Upper Body (Back)", 
-            sMind: "Focus: Lats & Pulls" 
-          },
-          // 6: Saturday
-          { 
-            cTitle: phase.isDeload ? "Long Bike" : "Long Bike + Brick", 
-            cDist: phase.isDeload ? `${bDist} Miles` : `${bDist} Miles + 10m Run`, 
-            cZone: "Zone 2", 
-            cMind: "Aerobic base building.", 
-            sTitle: phase.isDeload ? "Mobility" : "Functional/Stability", 
-            sMind: "Post-ride recovery. Hydrate." 
-          }
+          { cTitle: "Active Recovery", cDist: "Walk or Light Row", cZone: "Zone 1", cMind: "Active recovery. Flush legs.", sTitle: phase.isDeload ? "Full Rest" : "Mobility & Flush", sMind: "<b>A. Couch Stretch:</b> 2m/leg<br><b>B. Pigeon Pose:</b> 2m/leg<br><b>C. Cat-Cow:</b> 20 reps" },
+          { cTitle: "Swim Intervals", cDist: `${sVol/4} x 100yd Chunks`, cZone: "Moderate", cMind: "Keep lats fresh for tomorrow. Light kick.", sTitle: phase.isDeload ? "Lower Pull (Light)" : "Legs (Ham Focus)", sMind: formatGym(phase.isDeload, "<b>A. RDLs:</b> 4x8-10<br><b>B. Hamstring Curls:</b> 3x12-15<br><b>C. Tibialis Raises:</b> 3x20 (Shin Armor)<br><b>D. Deadbugs:</b> 3x15") },
+          { cTitle: "Endurance Run", cDist: `${(rDist * 0.6).toFixed(1)} Miles`, cZone: "12:30-13:30/mi (Zone 2)", cMind: "Time on feet. Focus on nasal breathing and posture.", sTitle: phase.isDeload ? "Core (15 min)" : "Full Body & Core", sMind: formatGym(phase.isDeload, "<b>A. Farmers Carries:</b> 4x40 yards (Heavy)<br><b>B. Bird-Dogs:</b> 3x10/side<br><b>C. Plank w/ Reach:</b> 3x60s<br><b>D. Reverse Curls:</b> 3x12") },
+          { cTitle: "Aerobic Bike", cDist: `45 Mins`, cZone: "11-12 mph (Zone 2)", cMind: "Steady spin. Flush the legs out.", sTitle: phase.isDeload ? "Upper Push (Light)" : "Upper (Chest Lead)", sMind: formatGym(phase.isDeload, "<b>A. Flat Bench:</b> 4x6-8<br><b>B. Incline DB Bench:</b> 4x10-12<br><b>C. Dips:</b> 3xMax (Tricep Focus)<br><b>D. Hammer Curls:</b> 3x12") },
+          { cTitle: "Swim Sprints", cDist: `${sVol/50} x 50yd Chunks`, cZone: "High Efficiency", cMind: "Hydro-recovery for the legs. 50m intervals.", sTitle: phase.isDeload ? "Lower Push (Light)" : "Legs (Quad Focus)", sMind: formatGym(phase.isDeload, "<b style='color:var(--bpn-red);'>*Pre-Lift:</b> Pogo Jumps 3x20s / Depth Drops 3x5<br><b>A. Hack Squat:</b> 4x8-10<br><b>B. Leg Press:</b> 3x12-15<br><b>C. Walking Lunges:</b> 3x10/side") },
+          { cTitle: "Tempo Run", cDist: `${rDist} Miles`, cZone: "11:15/mi (Zone 3/4)", cMind: "Check foot pain levels. Find race pace.", sTitle: phase.isDeload ? "Upper Back (Light)" : "Upper (Back Lead)", sMind: formatGym(phase.isDeload, "<b>A. Pendlay Rows:</b> 4x8-10<br><b>B. Weighted Pull-ups:</b> 4xMax<br><b>C. Lat Pulldowns:</b> 3x12-15<br><b>D. Tricep Pushdowns:</b> 3x15") },
+          { cTitle: phase.isDeload ? "Long Bike" : "BRICK SESSION", cDist: phase.isDeload ? `${bDist} Miles` : `${bDist} Mi Bike / 1.5 Mi Run`, cZone: "Zone 2", cMind: "Aerobic base building. Practice Transition.", sTitle: phase.isDeload ? "Mobility" : "Chassis Armor", sMind: formatGym(phase.isDeload, "<b>A. Single-Leg RDLs:</b> 3x10/side<br><b>B. Heavy Soleus Raises:</b> 4x15<br><b>C. Banded Clamshells:</b> 3x20/side") }
         ]
       };
     }
@@ -304,22 +280,37 @@
       currentWeek = parseInt(document.getElementById("week-select").value);
       const plan = getWeeklyPlan(currentWeek);
       
+      // Calculate Dynamic Weekly Volume
+      const isDeload = [4, 8, 12, 16].includes(currentWeek);
+      let scale = Math.pow(CONFIG.scalingFactor, currentWeek - 1);
+      if (isDeload) scale = scale * CONFIG.deloadDrop;
+      
+      const weeklyRun = (11.0 * scale).toFixed(1);
+      const weeklyBike = (28.0 * scale).toFixed(1);
+      const weeklySwim = Math.round((1500 * scale) / 50) * 50;
+
+      // Update Phase Header
       document.getElementById("phase-name").innerText = `PHASE: ${plan.phase.name}`;
       document.getElementById("phase-name").style.color = plan.phase.color;
       document.getElementById("phase-obj").innerText = plan.phase.obj;
       
+      // Update Today's Display
       const dayNum = new Date().getDay(); 
       const todayData = plan.days[dayNum];
       
       document.getElementById("day-display").innerText = new Date().toLocaleDateString('en-US', { weekday: 'long' }).toUpperCase();
-      
       document.getElementById("cardio-title").innerText = todayData.cTitle;
       document.getElementById("c-dist").innerText = todayData.cDist;
       document.getElementById("c-zone").innerText = todayData.cZone;
       document.getElementById("cardio-mission").innerText = todayData.cMind;
-      
       document.getElementById("gym-title").innerText = todayData.sTitle;
       document.getElementById("gym-mission").innerHTML = todayData.sMind;
+
+      // Update Weekly Volume Box
+      document.getElementById("vol-title").innerText = `WEEK ${currentWeek} VOLUME TARGETS`;
+      document.getElementById("vol-run").innerText = `~${weeklyRun} MI`;
+      document.getElementById("vol-bike").innerText = `~${weeklyBike} MI`;
+      document.getElementById("vol-swim").innerText = `~${weeklySwim} YD`;
     }
 
     function buildCalendar() {
@@ -345,9 +336,12 @@
       }
     }
 
-    function showTab(idx) {
-      document.querySelectorAll('.panel').forEach((p, i) => p.classList.toggle('active', i === idx));
-      document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i === idx));
+    function showTab(idNum) {
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      
+      document.getElementById('p' + idNum).classList.add('active');
+      document.getElementById('tab' + idNum).classList.add('active');
     }
 
     initUI();
