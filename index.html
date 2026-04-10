@@ -59,11 +59,13 @@
   .vol-item b { display: block; font-size: 14px; }
 
   /* Calendar Styles */
-  .cal-row { display: grid; grid-template-columns: 40px 1fr; margin-bottom: 5px; border-radius: 3px; overflow: hidden; background: var(--bpn-grey); }
-  .cal-wk { display: flex; align-items: center; justify-content: center; font-family: 'Bebas Neue'; font-size: 18px; color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
-  .cal-details { padding: 10px; }
-  .cal-title { font-family: 'JetBrains Mono'; font-size: 10px; font-weight: 800; text-transform: uppercase; color: #fff; margin-bottom: 3px; }
-  .cal-stats { font-size: 10px; color: #aaa; }
+  .cal-month-header { font-family: 'Bebas Neue'; font-size: 26px; color: var(--bpn-red); border-bottom: 2px solid var(--bpn-red); margin: 25px 0 10px 0; padding-bottom: 5px; letter-spacing: 1px; }
+  .cal-row { display: grid; grid-template-columns: 45px 1fr; margin-bottom: 8px; border-radius: 3px; overflow: hidden; background: var(--bpn-grey); border-left: 2px solid var(--bpn-light-grey); }
+  .cal-wk { display: flex; align-items: center; justify-content: center; font-family: 'Bebas Neue'; font-size: 20px; color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
+  .cal-details { padding: 12px; }
+  .cal-title { font-family: 'JetBrains Mono'; font-size: 11px; font-weight: 800; text-transform: uppercase; color: #fff; margin-bottom: 2px; }
+  .cal-dates { font-family: 'Inter'; font-size: 10px; color: #fff; margin-bottom: 6px; font-weight: 700; }
+  .cal-stats { font-size: 11px; color: #aaa; }
 
   .footer-mantra { text-align: center; margin-top: 30px; font-family: 'Bebas Neue', sans-serif; font-size: 20px; color: var(--bpn-light-grey); letter-spacing: 2px; padding-bottom: 20px; text-transform: uppercase; }
 </style>
@@ -229,12 +231,12 @@
     function getPhaseDetails(wk) {
       const deloads = [4, 8, 12, 16];
       if (deloads.includes(wk)) {
-        return { name: "Deload", color: "#404040", obj: "Flush System. Neutral week.", isDeload: true }; // Charcoal
+        return { name: "Deload", color: "#404040", obj: "Flush System. Neutral week.", isDeload: true }; 
       }
-      if (wk <= 8) return { name: "Base", color: "#737373", obj: "Build Chassis. Form & Zone 2.", isDeload: false }; // Slate Grey
-      if (wk <= 15) return { name: "Build", color: "#990000", obj: "Engine Room. Push Tempo.", isDeload: false }; // Dark Red
-      if (wk <= 18) return { name: "Peak", color: "#ff0000", obj: "Race Ready. Long Simulation.", isDeload: false }; // BPN Red
-      return { name: "Taper", color: "#ffffff", obj: "Find Snap. Cut volume.", isDeload: false }; // White
+      if (wk <= 8) return { name: "Base", color: "#737373", obj: "Build Chassis. Form & Zone 2.", isDeload: false }; 
+      if (wk <= 15) return { name: "Build", color: "#990000", obj: "Engine Room. Push Tempo.", isDeload: false }; 
+      if (wk <= 18) return { name: "Peak", color: "#ff0000", obj: "Race Ready. Long Simulation.", isDeload: false }; 
+      return { name: "Taper", color: "#ffffff", obj: "Find Snap. Cut volume.", isDeload: false }; 
     }
 
     // --- 3. WEEKLY PLAN GENERATOR ---
@@ -243,15 +245,12 @@
       let scale = Math.pow(CONFIG.scalingFactor, wk - 1);
       if (phase.isDeload) scale = scale * CONFIG.deloadDrop;
 
-      // Scale Individual Daily Distances
       const rTempo = (CONFIG.base.runDistLong * scale).toFixed(1);
       const rEasy = (CONFIG.base.runDistEasy * scale).toFixed(1);
       const rBrick = (CONFIG.base.runDistBrick * scale).toFixed(1);
-      
       const bLong = (CONFIG.base.bikeDistLong * scale).toFixed(1);
-      const bEasy = Math.round(45 * scale); // Scale the time for Wednesday
-      
-      const sVol = Math.round((CONFIG.base.swimVol * scale) / 50) * 50; // Daily swim vol
+      const bEasy = Math.round(45 * scale); 
+      const sVol = Math.round((CONFIG.base.swimVol * scale) / 50) * 50; 
 
       const formatGym = (isDeload, normalMission) => {
         return isDeload ? "<b style='color:var(--bpn-red);'>[DELOAD]</b> Cut working sets by 50%. Focus strictly on mobility and form. Do not chase heavy numbers today." : normalMission;
@@ -273,9 +272,12 @@
 
     // --- 4. UI LOGIC & AUTO DATE SYNC ---
     let currentWeek = 1;
+    const raceDate = new Date("September 11, 2026").getTime();
+    const msPerWeek = 1000 * 60 * 60 * 24 * 7;
+    // Base Week 1 starts 20 weeks before the race
+    const startDate = raceDate - (20 * msPerWeek); 
 
     function initUI() {
-      // 1. Setup Dropdown Options
       const sel = document.getElementById("week-select");
       for(let i=1; i<=20; i++) {
         const opt = document.createElement("option");
@@ -284,48 +286,32 @@
         sel.appendChild(opt);
       }
       
-      // 2. Calculate Race Day Math
-      const raceDate = new Date("September 11, 2026").getTime();
       const today = new Date().getTime();
-      const msPerWeek = 1000 * 60 * 60 * 24 * 7;
-      
-      // Update Countdown Timer
       const days = Math.max(0, Math.floor((raceDate - today) / (1000 * 60 * 60 * 24)));
       document.getElementById("countdown").innerText = days + " DAYS TO RACE DAY";
       
-      // 3. Auto-Sync Current Week based on Today's Date
-      // 20 weeks before Sept 11, 2026 is April 24, 2026.
-      const startDate = raceDate - (20 * msPerWeek); 
-      
       if (today < startDate) {
-          currentWeek = 1; // Training hasn't officially started yet
+          currentWeek = 1; 
       } else {
-          // Calculate how many weeks have passed since start date
           currentWeek = Math.floor((today - startDate) / msPerWeek) + 1;
       }
       
-      // Cap it between 1 and 20
       if (currentWeek > 20) currentWeek = 20;
       if (currentWeek < 1) currentWeek = 1;
 
-      // Set the dropdown to the auto-calculated week
       sel.value = currentWeek;
 
-      // Render the UI
       buildCalendar();
       updateDashboard(currentWeek);
     }
 
     function updateWeekDropdown() {
-      // Triggered manually if you change the dropdown
       const selectedWeek = parseInt(document.getElementById("week-select").value);
       updateDashboard(selectedWeek);
     }
 
     function updateDashboard(weekNum) {
       const plan = getWeeklyPlan(weekNum);
-      
-      // Calculate Dynamic Weekly Volume based on true starting totals
       const isDeload = [4, 8, 12, 16].includes(weekNum);
       let scale = Math.pow(CONFIG.scalingFactor, weekNum - 1);
       if (isDeload) scale = scale * CONFIG.deloadDrop;
@@ -334,12 +320,10 @@
       const weeklyBike = (CONFIG.weeklyBase.bikeTotal * scale).toFixed(1);
       const weeklySwim = Math.round((CONFIG.weeklyBase.swimTotal * scale) / 50) * 50;
 
-      // Update Phase Header (Applies the Redline Colors)
       document.getElementById("phase-name").innerText = `PHASE: ${plan.phase.name}`;
       document.getElementById("phase-name").style.color = plan.phase.color;
       document.getElementById("phase-obj").innerText = plan.phase.obj;
       
-      // Update Today's Display
       const dayNum = new Date().getDay(); 
       const todayData = plan.days[dayNum];
       
@@ -351,7 +335,6 @@
       document.getElementById("gym-title").innerText = todayData.sTitle;
       document.getElementById("gym-mission").innerHTML = todayData.sMind;
 
-      // Update Weekly Volume Box Header & Data
       document.getElementById("vol-title").innerText = `WEEK ${weekNum} ESTIMATED VOLUME`;
       document.getElementById("vol-run").innerText = `~${weeklyRun} MI`;
       document.getElementById("vol-bike").innerText = `~${weeklyBike} MI`;
@@ -362,7 +345,27 @@
       const container = document.getElementById("calendar-container");
       container.innerHTML = "";
       
+      let currentMonth = -1;
+
       for(let i=1; i<=20; i++) {
+        // Calculate the exact start and end dates for this specific week
+        const wkStartMs = startDate + ((i - 1) * msPerWeek);
+        const wkEndMs = wkStartMs + (6 * 24 * 60 * 60 * 1000); // 6 days later
+        
+        const dStart = new Date(wkStartMs);
+        const dEnd = new Date(wkEndMs);
+
+        // Inject a new Month Header if we crossed into a new month
+        if (dStart.getMonth() !== currentMonth) {
+          currentMonth = dStart.getMonth();
+          const monthName = dStart.toLocaleString('default', { month: 'long', year: 'numeric' });
+          const monthHeader = document.createElement("div");
+          monthHeader.className = "cal-month-header";
+          monthHeader.innerText = monthName.toUpperCase();
+          container.appendChild(monthHeader);
+        }
+
+        const dateString = `${dStart.toLocaleString('default', { month: 'short' })} ${dStart.getDate()} - ${dEnd.toLocaleString('default', { month: 'short' })} ${dEnd.getDate()}`;
         const p = getWeeklyPlan(i);
         const row = document.createElement("div");
         row.className = "cal-row";
@@ -374,6 +377,7 @@
           <div class="cal-wk" style="background:${p.phase.color};">W${i}</div>
           <div class="cal-details">
             <div class="cal-title" style="color:${p.phase.color};">${p.phase.name} PHASE</div>
+            <div class="cal-dates">${dateString}</div>
             <div class="cal-stats"><b>Bike:</b> ${sat.cDist} | <b>Run:</b> ${fri.cDist}</div>
           </div>
         `;
@@ -389,7 +393,6 @@
       document.getElementById('tab' + idNum).classList.add('active');
     }
 
-    // Fire it up
     initUI();
   </script>
 </body>
