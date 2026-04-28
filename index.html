@@ -27,8 +27,8 @@
   .phase-obj { font-size: 10px; color: var(--muted); margin-top: 2px; }
   select#week-select { background: var(--bpn-light-grey); color: white; border: none; padding: 5px 10px; font-family: 'JetBrains Mono'; font-size: 11px; border-radius: 4px; outline: none; cursor: pointer;}
 
-  /* Weekly Scroll Dashboard */
-  .weekly-scroll { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 15px; margin-bottom: 15px; scroll-snap-type: x mandatory; }
+  /* Weekly Visibility Dashboard */
+  .weekly-scroll { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 15px; margin-bottom: 15px; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
   .weekly-day-card { min-width: 85px; background: var(--bpn-grey); padding: 10px; border-radius: 4px; text-align: center; border: 1px solid var(--bpn-light-grey); scroll-snap-align: start;}
   .weekly-day-card.active { border-color: var(--bpn-red); background: #251010; }
   .wd-name { font-family: 'JetBrains Mono'; font-size: 9px; color: var(--muted); display: block; }
@@ -44,6 +44,7 @@
   .tag { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--bpn-red); text-transform: uppercase; font-weight: 800; margin-bottom: 8px; display: block; }
   .card-title { font-family: 'Bebas Neue', sans-serif; font-size: 32px; color: #fff; line-height: 1; margin-bottom: 5px; letter-spacing: 1px; }
   
+  /* Morning Mission Styles */
   .check-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #2d2d2d; }
   .check-row:last-child { border-bottom: none; }
   .check-row span { font-size: 12px; color: #ddd; }
@@ -55,10 +56,9 @@
   .metric b { color: var(--text); display: block; font-size: 12px; margin-top: 2px; }
   .instruction { font-size: 12px; color: #bbb; line-height: 1.5; border-left: 2px solid var(--bpn-red); padding-left: 10px; }
   
-  .data-table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
-  .data-table tr { border-bottom: 1px solid rgba(255,255,255,0.05); }
-  .data-table td { padding: 10px 0; font-size: 12px; }
-  .data-table td:last-child { text-align: right; color: var(--text); font-family: 'JetBrains Mono'; font-size: 11px; font-weight: 700; }
+  .gym-list { list-style: none; margin-top: 10px; }
+  .gym-list li { font-size: 12px; color: #ddd; margin-bottom: 6px; padding-left: 10px; border-left: 1px solid #444; }
+  .gym-list b { color: #fff; }
 
   .vol-box { background: var(--bpn-red); padding: 15px; border-radius: 2px; margin-top: 20px; }
   .vol-title { font-family: 'Bebas Neue'; font-size: 20px; color: #fff; border-bottom: 1px solid rgba(255,255,255,0.3); margin-bottom: 10px; }
@@ -69,6 +69,8 @@
   .cal-row { display: grid; grid-template-columns: 45px 1fr; margin-bottom: 8px; background: var(--bpn-grey); border-left: 2px solid var(--bpn-light-grey); }
   .cal-wk { display: flex; align-items: center; justify-content: center; font-family: 'Bebas Neue'; font-size: 20px; color: #fff; }
   .cal-details { padding: 12px; }
+  .cal-title { font-family: 'JetBrains Mono'; font-size: 11px; font-weight: 800; text-transform: uppercase; color: #fff; margin-bottom: 2px; }
+  .cal-stats { font-size: 11px; color: #aaa; }
 
   .calc-box { background: #000; padding: 15px; border-radius: 4px; margin-top: 10px; }
   .calc-input { background: #1a1a1a; color: #fff; border: 1px solid var(--bpn-light-grey); padding: 8px; width: 100%; margin: 5px 0 15px 0; font-family: 'JetBrains Mono'; }
@@ -126,7 +128,7 @@
         <span class="tag">Cardio // Endurance</span>
         <div class="card-title" id="cardio-title">--</div>
         <div class="metric-grid">
-            <div class="metric">Distance<b><span id="c-dist">--</span></b></div>
+            <div class="metric">Details<b><span id="c-dist">--</span></b></div>
             <div class="metric">Target<b><span id="c-zone">--</span></b></div>
         </div>
         <p id="cardio-mission" class="instruction"></p>
@@ -135,7 +137,7 @@
     <div class="card">
         <span class="tag">Strength // Power</span>
         <div class="card-title" id="gym-title">--</div>
-        <div id="gym-mission" style="font-size: 12px; color: #ddd; line-height: 1.5;"></div>
+        <ul id="gym-mission" class="gym-list"></ul>
     </div>
 
     <div class="vol-box">
@@ -175,7 +177,12 @@
      <div class="card" style="border-left: 2px solid var(--bpn-red);">
         <span class="tag">Protocol 01 // Armor</span>
         <div class="card-title">IMPACT ARMOR</div>
-        <p class="instruction">Build tendon stiffness. Execute 2x/week.</p>
+        <p class="instruction">Build tendon stiffness. Execute 2x/week before lower body.</p>
+        <ul class="gym-list">
+            <li><b>Pogo Jumps:</b> 3 x 20s (Quick contact)</li>
+            <li><b>Depth Drops:</b> 3 x 5 (Stick landing)</li>
+            <li><b>Broad Jumps:</b> 3 x 5 (Max power)</li>
+        </ul>
      </div>
   </div>
 
@@ -197,9 +204,9 @@
     function getPhaseDetails(wk) {
       const deloads = [4, 8, 12, 16];
       if (deloads.includes(wk)) return { name: "Deload", color: "#404040", obj: "Flush System." }; 
-      if (wk <= 8) return { name: "Base", color: "#737373", obj: "Build Chassis." }; 
-      if (wk <= 15) return { name: "Build", color: "#990000", obj: "Engine Room." }; 
-      return { name: "Peak", color: "#ff0000", obj: "Race Ready." }; 
+      if (wk <= 8) return { name: "Base", color: "#737373", obj: "Build Chassis. Form & Zone 2." }; 
+      if (wk <= 15) return { name: "Build", color: "#990000", obj: "Engine Room. Push Tempo." }; 
+      return { name: "Peak", color: "#ff0000", obj: "Race Ready. Simulation." }; 
     }
 
     function getWeeklyPlan(wk) {
@@ -211,25 +218,30 @@
       const rTempo = (CONFIG.base.runDistLong * scale).toFixed(1);
       const rEasy = (CONFIG.base.runDistEasy * scale).toFixed(1);
       const bLong = (CONFIG.base.bikeDistLong * scale).toFixed(1);
+      const bEasy = (CONFIG.base.bikeDistEasy * scale).toFixed(1);
       const sVol = Math.min(Math.round((CONFIG.base.swimVol * scale) / 100) * 100, 4000);
+
+      const deloadPrefix = isDeload ? "<b style='color:var(--bpn-red)'>[DELOAD]</b> " : "";
 
       return {
         phase: phase,
         days: [
-          { name: "MON", cTitle: "Rest", cDist: "Active recovery", cZone: "Z1", cMind: "Mobility focus.", sTitle: "Recovery" },
-          { name: "TUE", cTitle: "Swim", cDist: `${sVol/100} x 100yd`, cZone: "Mod", cMind: "Focus on pull.", sTitle: "Legs (Ham)" },
-          { name: "WED", cTitle: "Run", cDist: `${rEasy} Mi`, cZone: "Z2", cMind: "Zone 2 base.", sTitle: "Full Body" },
-          { name: "THU", cTitle: "Bike", cDist: `${(CONFIG.base.bikeDistEasy*scale).toFixed(1)} Mi`, cZone: "Z2", cMind: "Steady spin.", sTitle: "Upper Push" },
-          { name: "FRI", cTitle: "Swim", cDist: `${sVol/50} x 50yd`, cZone: "Sprint", cMind: "Speed work.", sTitle: "Legs (Quad)" },
-          { name: "SAT", cTitle: "Run", cDist: `${rTempo} Mi`, cZone: "Z3", cMind: "Race pace.", sTitle: "Upper Back" },
-          { name: "SUN", cTitle: "Brick", cDist: `${bLong} Mi Bike`, cZone: "Z2", cMind: "Ironman simulation.", sTitle: "Armor" }
+          { name: "MON", cTitle: "Active Recovery", cDist: "Walk or Light Row", cZone: "Zone 1", cMind: "Active recovery. Flush legs.", sTitle: "Mobility & Flush", sExercises: ["Couch Stretch: 2m/leg", "Pigeon Pose: 2m/leg", "Cat-Cow: 20 reps"] },
+          { name: "TUE", cTitle: "Swim Intervals", cDist: `${sVol/100} x 100yd Sets`, cZone: "Moderate", cMind: "Keep lats fresh. Focus on the pull.", sTitle: "Legs (Ham Focus)", sExercises: [`${deloadPrefix}RDLs: 4x8-10`, "Hamstring Curls: 3x12-15", "Tibialis Raises: 3x20", "Deadbugs: 3x15"] },
+          { name: "WED", cTitle: "Endurance Run", cDist: `${rEasy} Miles`, cZone: "Z2 (12:30/mi)", cMind: "Time on feet. Focus on nasal breathing.", sTitle: "Full Body & Core", sExercises: [`${deloadPrefix}Farmers Carries: 4x40yd`, "Bird-Dogs: 3x10/side", "Plank w/ Reach: 3x60s", "Reverse Curls: 3x12"] },
+          { name: "THU", cTitle: "Aerobic Bike", cDist: `${bEasy} Miles`, cZone: "Z2 (Steady)", cMind: "Steady spin. Flush the legs.", sTitle: "Upper (Chest Lead)", sExercises: [`${deloadPrefix}Flat Bench: 4x6-8`, "Incline DB Bench: 4x10-12", "Dips: 3xMax", "Hammer Curls: 3x12"] },
+          { name: "FRI", cTitle: "Swim Sprints", cDist: `${sVol/50} x 50yd Sets`, cZone: "High Eff", cMind: "Sprint intervals. Hydro-recovery.", sTitle: "Legs (Quad Focus)", sExercises: [`${deloadPrefix}Hack Squat: 4x8-10`, "Leg Press: 3x12-15", "Walking Lunges: 3x10/side"] },
+          { name: "SAT", cTitle: "Tempo Run", cDist: `${rTempo} Miles`, cZone: "Z3/4 (Race Pace)", cMind: "Check foot pain levels. Find the snap.", sTitle: "Upper (Back Lead)", sExercises: [`${deloadPrefix}Pendlay Rows: 4x8-10`, "Weighted Pull-ups: 4xMax", "Lat Pulldowns: 3x12-15", "Tricep Pushdowns: 3x15"] },
+          { name: "SUN", cTitle: isDeload ? "Long Bike" : "BRICK SESSION", cDist: isDeload ? `${bLong} Miles` : `${bLong} Mi Bike / 1.5 Mi Run`, cZone: "Zone 2", cMind: "Practice transition. Aerobic base building.", sTitle: "Chassis Armor", sExercises: ["Single-Leg RDLs: 3x10/side", "Heavy Soleus Raises: 4x15", "Banded Clamshells: 3x20/side"] }
         ]
       };
     }
 
     function calculateFuel() {
       const mins = document.getElementById('fuel-time').value;
-      const totalCarbs = (mins / 60) * (document.getElementById('fuel-intensity').value > 7 ? 80 : 60);
+      const intensity = document.getElementById('fuel-intensity').value;
+      const carbsPerHour = intensity > 7 ? 80 : 60;
+      const totalCarbs = (mins / 60) * carbsPerHour;
       document.getElementById('res-malto').innerText = Math.round(totalCarbs * 0.6) + "g";
       document.getElementById('res-fructose').innerText = Math.round(totalCarbs * 0.4) + "g";
       document.getElementById('res-salt').innerText = Math.round((mins / 60) * 800) + "mg";
@@ -278,7 +290,7 @@
       plan.days.forEach((day, idx) => {
         const dCard = document.createElement("div");
         dCard.className = `weekly-day-card ${idx === currentDayIdx ? 'active' : ''}`;
-        dCard.innerHTML = `<span class="wd-name">${day.name}</span><span class="wd-work">${day.cTitle}</span>`;
+        dCard.innerHTML = `<span class="wd-name">${day.name}</span><span class="wd-work">${day.cTitle.split(' ')[0]}</span>`;
         overview.appendChild(dCard);
       });
 
@@ -288,6 +300,14 @@
       document.getElementById("c-zone").innerText = todayData.cZone;
       document.getElementById("cardio-mission").innerText = todayData.cMind;
       document.getElementById("gym-title").innerText = todayData.sTitle;
+      
+      const gymList = document.getElementById("gym-mission");
+      gymList.innerHTML = "";
+      todayData.sExercises.forEach(ex => {
+        const li = document.createElement("li");
+        li.innerHTML = ex;
+        gymList.appendChild(li);
+      });
 
       document.getElementById("vol-run").innerText = `~${(CONFIG.weeklyBase.runTotal * scale).toFixed(1)} MI`;
       document.getElementById("vol-bike").innerText = `~${(CONFIG.weeklyBase.bikeTotal * scale).toFixed(1)} MI`;
@@ -302,8 +322,8 @@
         const row = document.createElement("div");
         row.className = "cal-row";
         row.innerHTML = `<div class="cal-wk" style="background:${p.phase.color};">W${i}</div>
-          <div class="cal-details"><div class="cal-title">${p.phase.name}</div>
-          <div class="cal-stats"><b>Bike:</b> ${p.days[6].cDist} | <b>Run:</b> ${p.days[5].cDist}</div></div>`;
+          <div class="cal-details"><div class="cal-title" style="color:${p.phase.color}">${p.phase.name}</div>
+          <div class="cal-stats"><b>Bike:</b> ${p.days[6].cDist.split('/')[0]} | <b>Run:</b> ${p.days[5].cDist}</div></div>`;
         container.appendChild(row);
       }
     }
