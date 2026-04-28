@@ -7,181 +7,82 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
 <style>
   :root { 
-    --bpn-red: #ff0000; 
-    --bpn-black: #0e0e0e; 
-    --bpn-grey: #1a1a1a; 
-    --bpn-light-grey: #2d2d2d; 
-    --text: #ffffff; 
-    --muted: #888888; 
+    --bpn-red: #ff0000; --bpn-black: #0e0e0e; --bpn-grey: #1a1a1a; 
+    --bpn-light-grey: #2d2d2d; --text: #ffffff; --muted: #888888; 
   }
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   body { background: var(--bpn-black); color: var(--text); font-family: 'Inter', sans-serif; padding: 20px; max-width: 500px; margin: 0 auto; }
-  
   header { text-align: left; margin-bottom: 15px; border-left: 4px solid var(--bpn-red); padding-left: 15px; }
   h1 { font-family: 'Bebas Neue', sans-serif; font-size: 64px; line-height: 0.85; text-transform: uppercase; font-weight: 900; }
   #countdown { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--bpn-red); text-transform: uppercase; font-weight: 700; margin-top: 5px; display: block; }
-  
   .weekly-scroll { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 15px; margin-bottom: 15px; scroll-snap-type: x mandatory; }
-  .weekly-day-card { min-width: 85px; background: var(--bpn-grey); padding: 10px; border-radius: 4px; text-align: center; border: 1px solid var(--bpn-light-grey); scroll-snap-align: start; cursor: pointer; transition: 0.2s;}
+  .weekly-day-card { min-width: 85px; background: var(--bpn-grey); padding: 10px; border-radius: 4px; text-align: center; border: 1px solid var(--bpn-light-grey); scroll-snap-align: start; cursor: pointer;}
   .weekly-day-card.active { border-color: var(--bpn-red); background: #251010; border-width: 2px; }
   .wd-name { font-family: 'JetBrains Mono'; font-size: 9px; color: var(--muted); display: block; }
   .wd-work { font-family: 'Bebas Neue'; font-size: 16px; color: #fff; display: block; margin-top: 4px; }
-
   .card { background: var(--bpn-grey); border-radius: 2px; padding: 20px; margin-bottom: 12px; border-top: 1px solid var(--bpn-light-grey); border-left: 4px solid var(--bpn-red); }
   .tag { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--bpn-red); text-transform: uppercase; font-weight: 800; margin-bottom: 8px; display: block; }
   .card-title { font-family: 'Bebas Neue', sans-serif; font-size: 34px; color: #fff; line-height: 1; margin-bottom: 8px; letter-spacing: 1px; }
-  
   .interval-box { background: #000; padding: 12px; margin: 10px 0; border-radius: 4px; border: 1px solid var(--bpn-light-grey); }
   .interval-row { display: flex; justify-content: space-between; font-family: 'JetBrains Mono'; font-size: 12px; margin-bottom: 5px; }
   .interval-row b { color: var(--bpn-red); }
-
   .coach-note { font-size: 12px; color: #aaa; line-height: 1.5; font-style: italic; margin-top: 10px; padding-top: 10px; border-top: 1px solid #333; }
   .gym-list { list-style: none; margin-top: 10px; }
   .gym-list li { font-size: 13px; color: #ddd; margin-bottom: 8px; padding-left: 10px; border-left: 1px solid var(--bpn-red); }
 </style>
 </head>
 <body>
-
-  <header>
-    <h1>ELITE<br>COMMAND</h1>
-    <span id="countdown">-- DAYS TO RACE</span>
-  </header>
-
+  <header><h1>ELITE<br>COMMAND</h1><span id="countdown">-- DAYS TO RACE</span></header>
   <div id="weekly-overview" class="weekly-scroll"></div>
-
-  <div class="panel active" id="p0">
-    <div class="card">
-        <span class="tag" id="session-type">Cardio Prescription</span>
-        <div class="card-title" id="cardio-title">--</div>
-        
-        <div class="interval-box" id="interval-details"></div>
-        
-        <div id="cardio-cue" style="font-size: 11px; font-weight: 700; color: #fff; text-transform: uppercase; margin-bottom: 5px;"></div>
-        <div id="cardio-mission" class="coach-note"></div>
-    </div>
-
-    <div class="card" style="border-left-color: #fff;">
-        <span class="tag" style="color:#fff;">Athletic Strength</span>
-        <div class="card-title" id="gym-title">--</div>
-        <ul id="gym-mission" class="gym-list"></ul>
-    </div>
+  <div class="panel active">
+    <div class="card"><span class="tag">Cardio Strategy</span><div class="card-title" id="c-title">--</div><div class="interval-box" id="c-intervals"></div><div id="c-cue" style="font-size: 11px; font-weight: 700; color: #fff; text-transform: uppercase;"></div><div id="c-note" class="coach-note"></div></div>
+    <div class="card" style="border-left-color: #fff;"><span class="tag" style="color:#fff;">Strength Focus</span><div class="card-title" id="s-title">--</div><ul id="s-list" class="gym-list"></ul></div>
   </div>
-
   <script>
-    const CONFIG = {
-      scalingFactor: 1.10,
-      base: { runInt: 0.25, runLong: 3.1, bikeLong: 12.0, swim: 500 }
-    };
-
-    let selectedDayIdx = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1;
+    const CONFIG = { scaling: 1.10, base: { run: 2.0, bike: 12.0, swim: 400 } };
+    let selectedIdx = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1;
 
     function getPlan(wk) {
-      const isDeload = [4, 8, 12, 16].includes(wk);
-      const scale = isDeload ? Math.pow(CONFIG.scalingFactor, wk - 1) * 0.75 : Math.pow(CONFIG.scalingFactor, wk - 1);
+      const isDeload = [4,8,12,16].includes(wk);
+      const scale = isDeload ? Math.pow(CONFIG.scaling, wk-1) * 0.75 : Math.pow(CONFIG.scaling, wk-1);
+      const sVol = Math.round((CONFIG.base.swim * scale)/50)*50;
       
-      const repCount = isDeload ? 4 : Math.min(6 + Math.floor(wk/2), 12);
-      const bikeInterval = (scale * 5).toFixed(1);
-
-      return {
-        days: [
-          { 
-            name: "MON", cTitle: "Active Recovery", 
-            intervals: [{label: "Duration", val: "20-30 min"}, {label: "Intensity", val: "Z1 Walk/Yoga"}],
-            cue: "Nasal breathing only.", mind: "Coach Note: Blood flow is the goal. Reset the CNS for tomorrow's intervals.",
-            sTitle: "Mobility & Prehab", sEx: ["Couch Stretch: 2m/leg", "Bird-Dogs: 3x12", "Deadbugs: 3x15"]
-          },
-          { 
-            name: "TUE", cTitle: "VO2 Max Run Intervals", 
-            intervals: [{label: "Sets", val: `${repCount} x 400m`}, {label: "Pace", val: "Z4/5 (Hard)"}, {label: "Rest", val: "90s Walk"}],
-            cue: "Drive knees, land mid-foot.", mind: "Coach Note: This builds high-end speed. The final 2 reps should be very difficult.",
-            sTitle: "Lower Body Compound", sEx: ["Back Squat: 3x5 (Heavy)", "Tib Raises: 3x20", "Pogo Jumps: 3x20s"]
-          },
-          { 
-            name: "WED", cTitle: "Endurance Swim", 
-            intervals: [{label: "Total", val: `${Math.round(500*scale)} Yards`}, {label: "Focus", val: "Bilateral Breathing"}],
-            cue: "Early vertical forearm.", mind: "Coach Note: Do not rush the stroke. Focus on efficiency and distance per stroke.",
-            sTitle: "Full Body Athletic", sEx: ["DB Snatch: 3x8", "Pull-Ups: 3xMax", "Plank: 3x60s"]
-          },
-          { 
-            name: "THU", cTitle: "Power Intervals (Bike)", 
-            intervals: [{label: "Sets", val: `${repCount} x 2 min`}, {label: "Power", val: "Z4 (90% Effort)"}, {label: "Rest", val: "1 min spin"}],
-            cue: "Keep upper body still.", mind: "Coach Note: Teaches the legs to produce power under fatigue.",
-            sTitle: "Upper Body Compound", sEx: ["Flat Bench: 3x5", "Bent Over Rows: 3x8", "Dips: 3x10"]
-          },
-          { 
-            name: "FRI", cTitle: "Aerobic Threshold Run", 
-            intervals: [{label: "Distance", val: `${(2*scale).toFixed(1)} Mi`}, {label: "Intensity", val: "Z2 (Steady)"}],
-            cue: "Check posture every mile.", mind: "Coach Note: Building the aerobic base. This should feel 'all day' easy.",
-            sTitle: "Lower Leg Armor", sEx: ["RDLs: 3x8", "Soleus Raises: 4x15", "Walking Lunges: 3x10/side"]
-          },
-          { 
-            name: "SAT", cTitle: "BRICK SESSION", 
-            intervals: [{label: "Bike", val: `${(12*scale).toFixed(1)} Mi`}, {label: "Run", val: "1.5 Mi (Race Pace)"}],
-            cue: "Quick transition (T2).", mind: "Coach Note: Practicing the heavy-leg feeling of the run off the bike.",
-            sTitle: "Chassis Armor", sEx: ["Single-Leg RDL: 3x10", "Banded Clamshells: 3x20"]
-          },
-          { 
-            name: "SUN", cTitle: "Total Recovery", 
-            intervals: [{label: "Rest", val: "OFF"}],
-            cue: "Hydrate and decompress.", mind: "Coach Note: Full mental and physical reset. Ready to crush next week.",
-            sTitle: "Rest Day", sEx: ["No Lifting", "Optional Foam Roll"]
-          }
-        ]
-      };
+      return { days: [
+        { name: "MON", ct: "Swim: Lat Focus", ci: [{l: "Volume", v: `${sVol}yd`}, {l: "Set", v: `${Math.round(sVol/100)}x100yd`}], cue: "Reach & Rotate", note: "Keep lats fresh for the pull. Focus on a long entry.", st: "Lower Body Pull", sl: ["Deadlift: 3x5 (Heavy)", "RDL: 3x10", "Tib Raises: 3x20"] },
+        { name: "TUE", ct: "Run: Zone 2", ci: [{l: "Distance", v: `${(2*scale).toFixed(1)}mi`}, {l: "Pace", v: "12:30-13:30"}], cue: "Nasal Breathing", note: "Build the engine. Aerobic base is the priority today.", st: "Full Body & Core", sl: ["Power Cleans: 3x3", "Plank: 3x60s", "Deadbugs: 3x15"] },
+        { name: "WED", ct: "Bike: Zone 2", ci: [{l: "Duration", v: "45-60m"}, {l: "Speed", v: "11-12mph"}], cue: "90+ RPM Cadence", note: "Steady spin. Flush legs from Tuesday run.", st: "Upper Body (Chest)", sl: ["Bench Press: 3x5", "Incline DB: 3x10", "Dips: 3xMax"] },
+        { name: "THU", ct: "Swim: Efficiency", ci: [{l: "Volume", v: `${sVol}yd`}, {l: "Set", v: `${Math.round(sVol/50)}x50yd`}], cue: "High Elbow Catch", note: "Focus on technical drills. High efficiency in the water.", st: "Lower Body Push", sl: ["Back Squat: 3x5", "Walking Lunges: 3x10/side", "Pogo Jumps: 3x20s"] },
+        { name: "FRI", ct: "Run: 5K Tempo", ci: [{l: "Distance", v: "3.1mi"}, {l: "Effort", v: "8/10 Intensity"}], cue: "Drive the Knees", note: "Simulate race intensity. This is where the snap comes from.", st: "Upper Body (Back)", sl: ["Weighted Pull-ups: 3xMax", "Bent Over Rows: 3x8", "Face Pulls: 3x15"] },
+        { name: "SAT", ct: "Long Bike + Brick", ci: [{l: "Bike", v: `${(12*scale).toFixed(1)}mi`}, {l: "Walk", v: "10m Brick"}], cue: "Aero Position Practice", note: "Time in the saddle. Practice your fueling on the bike.", st: "Functional Stability", sl: ["Single Leg RDL: 3x10", "Soleus Raises: 4x15", "Banded Clamshells: 3x20"] },
+        { name: "SUN", ct: "Active Recovery", ci: [{l: "Type", v: "Walk"}, {l: "Duration", v: "20m"}], cue: "Decompress", note: "Total system reset. No heavy output.", st: "Mobility / Recovery", sl: ["Couch Stretch: 2m/leg", "Pigeon Pose: 2m/leg", "Foam Roll: 10m"] }
+      ]};
     }
 
-    function updateView(dayIdx) {
-      selectedDayIdx = dayIdx;
-      const weekNum = parseInt(document.getElementById("week-select")?.value || 1);
-      const plan = getPlan(weekNum);
-      const data = plan.days[dayIdx];
-
-      document.getElementById("cardio-title").innerText = data.cTitle;
-      document.getElementById("cardio-cue").innerText = `Cue: ${data.cue}`;
-      document.getElementById("cardio-mission").innerText = data.mind;
-      
-      const intBox = document.getElementById("interval-details");
-      intBox.innerHTML = data.intervals.map(i => `<div class="interval-row"><span>${i.label}</span><b>${i.val}</b></div>`).join('');
-
-      document.getElementById("gym-title").innerText = data.sTitle;
-      const gymList = document.getElementById("gym-mission");
-      gymList.innerHTML = data.sEx.map(ex => `<li>${ex}</li>`).join('');
-
-      // Refresh weekly scroll active state
-      initWeeklyScroll(weekNum);
+    function updateView(idx) {
+      selectedIdx = idx;
+      const wk = parseInt(document.getElementById("wk-sel")?.value || 1);
+      const day = getPlan(wk).days[idx];
+      document.getElementById("c-title").innerText = day.ct;
+      document.getElementById("c-cue").innerText = `Cue: ${day.cue}`;
+      document.getElementById("c-note").innerText = `Coach: ${day.note}`;
+      document.getElementById("c-intervals").innerHTML = day.ci.map(i => `<div class="interval-row"><span>${i.l}</span><b>${i.v}</b></div>`).join('');
+      document.getElementById("s-title").innerText = day.st;
+      document.getElementById("s-list").innerHTML = day.sl.map(s => `<li>${s}</li>`).join('');
+      initScroll(wk);
     }
 
-    function initWeeklyScroll(weekNum) {
-      const plan = getPlan(weekNum);
-      const container = document.getElementById("weekly-overview");
-      container.innerHTML = plan.days.map((d, i) => `
-        <div class="weekly-day-card ${i === selectedDayIdx ? 'active' : ''}" onclick="updateView(${i})">
-          <span class="wd-name">${d.name}</span>
-          <span class="wd-work">${d.cTitle.split(' ')[0]}</span>
-        </div>
-      `).join('');
+    function initScroll(wk) {
+      document.getElementById("weekly-overview").innerHTML = getPlan(wk).days.map((d, i) => `<div class="weekly-day-card ${i===selectedIdx?'active':''}" onclick="updateView(${i})"><span class="wd-name">${d.name}</span><span class="wd-work">${d.ct.split(':')[0]}</span></div>`).join('');
     }
 
     function init() {
-      const raceDate = new Date("September 11, 2026").getTime();
-      const today = new Date().getTime();
-      document.getElementById("countdown").innerText = Math.max(0, Math.floor((raceDate - today) / (1000 * 60 * 60 * 24))) + " DAYS TO RACE";
-      
-      // Add Week Select to header (simplified for this block)
-      const header = document.querySelector('header');
-      const sel = document.createElement('select');
-      sel.id = "week-select";
-      sel.onchange = () => updateView(selectedDayIdx);
-      for(let i=1; i<=20; i++) {
-        let opt = document.createElement('option');
-        opt.value = i; opt.text = `WEEK ${i}`;
-        sel.appendChild(opt);
-      }
-      header.appendChild(sel);
-
-      updateView(selectedDayIdx);
+      const race = new Date("September 11, 2026").getTime();
+      document.getElementById("countdown").innerText = Math.max(0, Math.floor((race - new Date().getTime()) / (1000*60*60*24))) + " DAYS TO RACE";
+      const sel = document.createElement('select'); sel.id = "wk-sel"; sel.onchange = () => updateView(selectedIdx);
+      for(let i=1; i<=20; i++) { let o = document.createElement('option'); o.value = i; o.text = `WEEK ${i}`; sel.appendChild(o); }
+      document.querySelector('header').appendChild(sel);
+      updateView(selectedIdx);
     }
-
     init();
   </script>
 </body>
