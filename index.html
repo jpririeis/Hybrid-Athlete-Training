@@ -21,51 +21,57 @@
   h1 { font-family: 'Bebas Neue', sans-serif; font-size: 64px; line-height: 0.85; text-transform: uppercase; font-weight: 900; }
   #countdown { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--bpn-red); text-transform: uppercase; font-weight: 700; margin-top: 5px; display: block; }
   
-  /* Phase Progress Bar */
   .phase-bar { background: var(--bpn-grey); border-radius: 4px; padding: 10px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; border: 1px solid var(--bpn-light-grey); border-left: 2px solid var(--bpn-red); }
   .phase-info { display: flex; flex-direction: column; }
   .phase-name { font-family: 'JetBrains Mono'; font-size: 12px; font-weight: 800; color: var(--text); text-transform: uppercase; }
   .phase-obj { font-size: 10px; color: var(--muted); margin-top: 2px; }
   select#week-select { background: var(--bpn-light-grey); color: white; border: none; padding: 5px 10px; font-family: 'JetBrains Mono'; font-size: 11px; border-radius: 4px; outline: none; cursor: pointer;}
 
-  /* Tabs */
+  /* Weekly Scroll Dashboard */
+  .weekly-scroll { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 15px; margin-bottom: 15px; scroll-snap-type: x mandatory; }
+  .weekly-day-card { min-width: 85px; background: var(--bpn-grey); padding: 10px; border-radius: 4px; text-align: center; border: 1px solid var(--bpn-light-grey); scroll-snap-align: start;}
+  .weekly-day-card.active { border-color: var(--bpn-red); background: #251010; }
+  .wd-name { font-family: 'JetBrains Mono'; font-size: 9px; color: var(--muted); display: block; }
+  .wd-work { font-family: 'Bebas Neue'; font-size: 16px; color: #fff; display: block; margin-top: 4px; }
+
   .tabs { display: flex; gap: 2px; background: var(--bpn-grey); padding: 4px; border-radius: 4px; margin-bottom: 20px; }
   .tab-btn { background: transparent; border: none; color: var(--muted); padding: 10px 5px; font-family: 'Inter'; font-size: 10px; font-weight: 700; cursor: pointer; flex: 1; text-transform: uppercase; text-align: center;}
   .tab-btn.active { background: var(--bpn-light-grey); color: #fff; }
   .panel { display: none; }
   .panel.active { display: block; }
   
-  /* Cards */
   .card { background: var(--bpn-grey); border-radius: 2px; padding: 20px; margin-bottom: 12px; border-top: 1px solid var(--bpn-light-grey); }
   .tag { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--bpn-red); text-transform: uppercase; font-weight: 800; margin-bottom: 8px; display: block; }
   .card-title { font-family: 'Bebas Neue', sans-serif; font-size: 32px; color: #fff; line-height: 1; margin-bottom: 5px; letter-spacing: 1px; }
+  
+  .check-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #2d2d2d; }
+  .check-row:last-child { border-bottom: none; }
+  .check-row span { font-size: 12px; color: #ddd; }
+  .check-row b { color: var(--bpn-red); font-family: 'JetBrains Mono'; margin-right: 8px; }
+  input[type="checkbox"] { accent-color: var(--bpn-red); width: 18px; height: 18px; cursor: pointer; }
+
   .metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; border-bottom: 1px solid var(--bpn-light-grey); padding-bottom: 15px; }
   .metric { font-family: 'JetBrains Mono'; font-size: 9px; color: var(--muted); text-transform: uppercase; }
   .metric b { color: var(--text); display: block; font-size: 12px; margin-top: 2px; }
   .instruction { font-size: 12px; color: #bbb; line-height: 1.5; border-left: 2px solid var(--bpn-red); padding-left: 10px; }
   
-  /* Tables */
   .data-table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
   .data-table tr { border-bottom: 1px solid rgba(255,255,255,0.05); }
   .data-table td { padding: 10px 0; font-size: 12px; }
   .data-table td:last-child { text-align: right; color: var(--text); font-family: 'JetBrains Mono'; font-size: 11px; font-weight: 700; }
-  .data-table b { color: #fff; display: block; font-size: 13px; font-weight: 700; }
-  
-  /* Volume Targets Box */
+
   .vol-box { background: var(--bpn-red); padding: 15px; border-radius: 2px; margin-top: 20px; }
   .vol-title { font-family: 'Bebas Neue'; font-size: 20px; color: #fff; border-bottom: 1px solid rgba(255,255,255,0.3); margin-bottom: 10px; }
   .vol-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; }
   .vol-item { font-family: 'JetBrains Mono'; font-size: 10px; color: #fff; }
   .vol-item b { display: block; font-size: 14px; }
 
-  /* Calendar Styles */
-  .cal-month-header { font-family: 'Bebas Neue'; font-size: 26px; color: var(--bpn-red); border-bottom: 2px solid var(--bpn-red); margin: 25px 0 10px 0; padding-bottom: 5px; letter-spacing: 1px; }
-  .cal-row { display: grid; grid-template-columns: 45px 1fr; margin-bottom: 8px; border-radius: 3px; overflow: hidden; background: var(--bpn-grey); border-left: 2px solid var(--bpn-light-grey); }
-  .cal-wk { display: flex; align-items: center; justify-content: center; font-family: 'Bebas Neue'; font-size: 20px; color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
+  .cal-row { display: grid; grid-template-columns: 45px 1fr; margin-bottom: 8px; background: var(--bpn-grey); border-left: 2px solid var(--bpn-light-grey); }
+  .cal-wk { display: flex; align-items: center; justify-content: center; font-family: 'Bebas Neue'; font-size: 20px; color: #fff; }
   .cal-details { padding: 12px; }
-  .cal-title { font-family: 'JetBrains Mono'; font-size: 11px; font-weight: 800; text-transform: uppercase; color: #fff; margin-bottom: 2px; }
-  .cal-dates { font-family: 'Inter'; font-size: 10px; color: #fff; margin-bottom: 6px; font-weight: 700; }
-  .cal-stats { font-size: 11px; color: #aaa; }
+
+  .calc-box { background: #000; padding: 15px; border-radius: 4px; margin-top: 10px; }
+  .calc-input { background: #1a1a1a; color: #fff; border: 1px solid var(--bpn-light-grey); padding: 8px; width: 100%; margin: 5px 0 15px 0; font-family: 'JetBrains Mono'; }
 
   .footer-mantra { text-align: center; margin-top: 30px; font-family: 'Bebas Neue', sans-serif; font-size: 20px; color: var(--bpn-light-grey); letter-spacing: 2px; padding-bottom: 20px; text-transform: uppercase; }
 </style>
@@ -77,7 +83,7 @@
     <span id="countdown">-- DAYS TO RACE DAY</span>
   </header>
 
-  <div class="phase-bar" id="phase-bar">
+  <div class="phase-bar">
     <div class="phase-info">
       <span class="phase-name" id="phase-name">PHASE: BASE</span>
       <span class="phase-obj" id="phase-obj">Build the Chassis.</span>
@@ -93,15 +99,34 @@
   </div>
 
   <div class="panel active" id="p0">
-    <div style="text-align: center; margin-bottom: 15px;">
-        <span id="day-display" style="font-family: 'JetBrains Mono'; color: var(--bpn-red); font-size: 12px; font-weight: 800;"></span>
+    <div class="weekly-scroll" id="weekly-overview"></div>
+
+    <div class="card" style="border-left: 4px solid #fff; background: #1a1a1a;">
+        <span class="tag" style="color: #fff;">05:00 - 07:30 // Discipline</span>
+        <div class="card-title">MORNING MISSION</div>
+        <div class="check-row">
+            <span><b>05:00</b> Wake Up & Hydrate</span>
+            <input type="checkbox">
+        </div>
+        <div class="check-row">
+            <span><b>05:10</b> Scripture Study (20m)</span>
+            <input type="checkbox">
+        </div>
+        <div class="check-row">
+            <span><b>05:45</b> Execute Cardio Session</span>
+            <input type="checkbox">
+        </div>
+        <div class="check-row">
+            <span><b>07:30</b> Ready / Out the Door</span>
+            <input type="checkbox">
+        </div>
     </div>
     
     <div class="card" id="cardio-card" style="border-left: 4px solid var(--bpn-red);">
         <span class="tag">Cardio // Endurance</span>
         <div class="card-title" id="cardio-title">--</div>
         <div class="metric-grid">
-            <div class="metric">Details<b><span id="c-dist">--</span></b></div>
+            <div class="metric">Distance<b><span id="c-dist">--</span></b></div>
             <div class="metric">Target<b><span id="c-zone">--</span></b></div>
         </div>
         <p id="cardio-mission" class="instruction"></p>
@@ -127,187 +152,113 @@
     <div id="calendar-container"></div>
   </div>
 
-  <div class="panel" id="p3">
+  <div class="panel" id="p1">
     <div class="card" style="border-left: 2px solid var(--bpn-red);">
-      <span class="tag">Protocol 01 // Pre-Lift</span>
-      <div class="card-title">IMPACT ARMOR (PLYOS)</div>
-      <p class="instruction" style="margin-bottom: 10px;">Execute 2x a week before lower body sessions to build tendon stiffness.</p>
-      <table class="data-table">
-        <tr><td><b>Pogo Jumps</b>Stiff ankles, quick contact</td><td>3 x 20s</td></tr>
-        <tr><td><b>Depth Drops</b>Step off box, stick landing</td><td>3 x 5</td></tr>
-        <tr><td><b>Broad Jumps</b>Max horizontal power</td><td>3 x 5</td></tr>
-      </table>
-    </div>
-
-    <div class="card">
-      <span class="tag">Protocol 02 // Pre-Hab</span>
-      <div class="card-title">LOWER LEG RESILIENCE</div>
-      <p class="instruction" style="margin-bottom: 10px;">Combat shin splints and Achilles tendonitis.</p>
-      <table class="data-table">
-        <tr><td><b>Tibialis Raises</b>Wall leans, pull toes up</td><td>3 x 20</td></tr>
-        <tr><td><b>Seated Soleus Raises</b>Heavy weight on knees</td><td>4 x 15</td></tr>
-        <tr><td><b>Single-Leg RDLs</b>Glute/Hamstring balance</td><td>3 x 10/leg</td></tr>
-        <tr><td><b>Banded Clamshells</b>Hip stability for running</td><td>3 x 20/leg</td></tr>
-      </table>
-    </div>
-
-    <div class="card">
-      <span class="tag">Protocol 03 // Post-Ride</span>
-      <div class="card-title">POST-BIKE FLUSH</div>
-      <p class="instruction" style="margin-bottom: 10px;">Immediate sequence after long rides to prevent hip lockdown.</p>
-      <table class="data-table">
-        <tr><td><b>Couch Stretch</b>Open hip flexors</td><td>2 min/leg</td></tr>
-        <tr><td><b>Pigeon Pose</b>Glute and piriformis release</td><td>2 min/leg</td></tr>
-        <tr><td><b>Cat-Cow</b>Spinal decompression</td><td>20 reps</td></tr>
-      </table>
+      <span class="tag">Tool // Calculator</span>
+      <div class="card-title">INTRA-WORKOUT FUEL</div>
+      <div class="calc-box">
+        <label class="metric">Workout Duration (Minutes)</label>
+        <input type="number" id="fuel-time" class="calc-input" value="60" oninput="calculateFuel()">
+        <label class="metric">Intensity (1-10)</label>
+        <input type="number" id="fuel-intensity" class="calc-input" value="5" oninput="calculateFuel()">
+        
+        <table class="data-table" style="margin-top: 10px;">
+          <tr><td><b>Maltodextrin</b></td><td id="res-malto">--g</td></tr>
+          <tr><td><b>Fructose</b></td><td id="res-fructose">--g</td></tr>
+          <tr><td><b>Sodium</b></td><td id="res-salt">--mg</td></tr>
+        </table>
+      </div>
     </div>
   </div>
 
-  <div class="panel" id="p1">
-    <div class="card">
-      <span class="tag">System 01 // Morning</span>
-      <div class="card-title">MORNING PRIME</div>
-      <table class="data-table">
-        <tr><td><b>Alpha GPC</b>Focus / Brain</td><td>300mg</td></tr>
-        <tr><td><b>Himalayan Salt</b>Adrenal Reset</td><td>1/4 tsp</td></tr>
-        <tr><td><b>Magnesium Malate</b>ATP Energy</td><td>1/2 tsp</td></tr>
-      </table>
-    </div>
-    <div class="card" style="border-left: 2px solid var(--bpn-red);">
-      <span class="tag">System 02 // Cardio</span>
-      <div class="card-title">CARDIO BOOSTER</div>
-      <table class="data-table">
-        <tr><td><b>Maltodextrin</b>Primary Glucose</td><td>40g</td></tr>
-        <tr><td><b>Fructose</b>Secondary Carb</td><td>20g</td></tr>
-        <tr><td><b>Citrulline Malate</b>Nitric Oxide</td><td>6g</td></tr>
-      </table>
-    </div>
-    <div class="card">
-      <span class="tag">System 03 // Lifting</span>
-      <div class="card-title">MIDDAY RESET</div>
-      <table class="data-table">
-        <tr><td><b>KSM-66 (Pill)</b>Cortisol/Muscle</td><td>600mg</td></tr>
-        <tr><td><b>L-Tyrosine (Pill)</b>Sales Focus</td><td>1.5g</td></tr>
-        <tr><td><b>Creatine Mono</b>Power / ATP</td><td>5g</td></tr>
-        <tr><td><b>Salt + Potassium</b>Nerve Firing</td><td>1/2+1/4 tsp</td></tr>
-      </table>
-    </div>
-    <div class="card">
-      <span class="tag">System 04 // Sleep</span>
-      <div class="card-title">SLEEP RESET</div>
-      <table class="data-table">
-        <tr><td><b>Magnesium Glycinate</b>Deep REM</td><td>400mg</td></tr>
-        <tr><td><b>L-Theanine</b>CNS Calm</td><td>200mg</td></tr>
-        <tr><td><b>Tart Cherry</b>Recovery Flush</td><td>1 tsp</td></tr>
-      </table>
-    </div>
+  <div class="panel" id="p3">
+     <div class="card" style="border-left: 2px solid var(--bpn-red);">
+        <span class="tag">Protocol 01 // Armor</span>
+        <div class="card-title">IMPACT ARMOR</div>
+        <p class="instruction">Build tendon stiffness. Execute 2x/week.</p>
+     </div>
   </div>
 
   <div class="footer-mantra">1% Better Everyday</div>
 
   <script>
-    // --- 1. CONFIG & BASELINES ---
     const CONFIG = {
-      scalingFactor: 1.10, // 10% increase per week
-      deloadDrop: 0.75,    // 25% drop for recovery weeks
-      // Specific daily starting targets
+      scalingFactor: 1.10, 
+      deloadDrop: 0.75,
       base: {
-        runDistLong: 3.1, 
-        runDistEasy: 2.0, 
-        runDistBrick: 1.5, 
-        bikeDistLong: 12.0, 
-        bikeDistEasy: 8.5,  
-        swimVol: 400      
+        runDistLong: 3.1, runDistEasy: 2.0, runDistBrick: 1.5, 
+        bikeDistLong: 12.0, bikeDistEasy: 8.5, swimVol: 400      
       },
-      // Weekly Totals for the HUD Calculation
       weeklyBase: {
-        runTotal: 6.6, 
-        bikeTotal: 20.5, 
-        swimTotal: 800 
+        runTotal: 6.6, bikeTotal: 20.5, swimTotal: 800 
       }
     };
 
-    // --- 2. PHASE & REDLINE COLOR LOGIC ---
     function getPhaseDetails(wk) {
       const deloads = [4, 8, 12, 16];
-      if (deloads.includes(wk)) {
-        return { name: "Deload", color: "#404040", obj: "Flush System. Neutral week.", isDeload: true }; 
-      }
-      if (wk <= 8) return { name: "Base", color: "#737373", obj: "Build Chassis. Form & Zone 2.", isDeload: false }; 
-      if (wk <= 15) return { name: "Build", color: "#990000", obj: "Engine Room. Push Tempo.", isDeload: false }; 
-      if (wk <= 18) return { name: "Peak", color: "#ff0000", obj: "Race Ready. Long Simulation.", isDeload: false }; 
-      return { name: "Taper", color: "#ffffff", obj: "Find Snap. Cut volume.", isDeload: false }; 
+      if (deloads.includes(wk)) return { name: "Deload", color: "#404040", obj: "Flush System." }; 
+      if (wk <= 8) return { name: "Base", color: "#737373", obj: "Build Chassis." }; 
+      if (wk <= 15) return { name: "Build", color: "#990000", obj: "Engine Room." }; 
+      return { name: "Peak", color: "#ff0000", obj: "Race Ready." }; 
     }
 
-    // --- 3. WEEKLY PLAN GENERATOR ---
     function getWeeklyPlan(wk) {
       const phase = getPhaseDetails(wk);
+      const isDeload = [4, 8, 12, 16].includes(wk);
       let scale = Math.pow(CONFIG.scalingFactor, wk - 1);
-      if (phase.isDeload) scale = scale * CONFIG.deloadDrop;
+      if (isDeload) scale = scale * CONFIG.deloadDrop;
 
       const rTempo = (CONFIG.base.runDistLong * scale).toFixed(1);
       const rEasy = (CONFIG.base.runDistEasy * scale).toFixed(1);
-      const rBrick = (CONFIG.base.runDistBrick * scale).toFixed(1);
       const bLong = (CONFIG.base.bikeDistLong * scale).toFixed(1);
-      const bEasy = Math.round(45 * scale); 
-      const sVol = Math.round((CONFIG.base.swimVol * scale) / 50) * 50; 
-
-      const formatGym = (isDeload, normalMission) => {
-        return isDeload ? "<b style='color:var(--bpn-red);'>[DELOAD]</b> Cut working sets by 50%. Focus strictly on mobility and form. Do not chase heavy numbers today." : normalMission;
-      };
+      const sVol = Math.min(Math.round((CONFIG.base.swimVol * scale) / 100) * 100, 4000);
 
       return {
         phase: phase,
         days: [
-          { cTitle: "Active Recovery", cDist: "Walk or Light Row", cZone: "Zone 1", cMind: "Active recovery. Flush legs.", sTitle: phase.isDeload ? "Full Rest" : "Mobility & Flush", sMind: "<b>A. Couch Stretch:</b> 2m/leg<br><b>B. Pigeon Pose:</b> 2m/leg<br><b>C. Cat-Cow:</b> 20 reps" },
-          { cTitle: "Swim Intervals", cDist: `${sVol/4} x 100yd Chunks`, cZone: "Moderate", cMind: "Keep lats fresh for tomorrow. Light kick.", sTitle: phase.isDeload ? "Lower Pull (Light)" : "Legs (Ham Focus)", sMind: formatGym(phase.isDeload, "<b>A. RDLs:</b> 4x8-10<br><b>B. Hamstring Curls:</b> 3x12-15<br><b>C. Tibialis Raises:</b> 3x20 (Shin Armor)<br><b>D. Deadbugs:</b> 3x15") },
-          { cTitle: "Endurance Run", cDist: `${rEasy} Miles`, cZone: "12:30-13:30/mi (Zone 2)", cMind: "Time on feet. Focus on nasal breathing and posture.", sTitle: phase.isDeload ? "Core (15 min)" : "Full Body & Core", sMind: formatGym(phase.isDeload, "<b>A. Farmers Carries:</b> 4x40 yards (Heavy)<br><b>B. Bird-Dogs:</b> 3x10/side<br><b>C. Plank w/ Reach:</b> 3x60s<br><b>D. Reverse Curls:</b> 3x12") },
-          { cTitle: "Aerobic Bike", cDist: `${bEasy} Mins`, cZone: "11-12 mph (Zone 2)", cMind: "Steady spin. Flush the legs out.", sTitle: phase.isDeload ? "Upper Push (Light)" : "Upper (Chest Lead)", sMind: formatGym(phase.isDeload, "<b>A. Flat Bench:</b> 4x6-8<br><b>B. Incline DB Bench:</b> 4x10-12<br><b>C. Dips:</b> 3xMax (Tricep Focus)<br><b>D. Hammer Curls:</b> 3x12") },
-          { cTitle: "Swim Sprints", cDist: `${sVol/50} x 50yd Chunks`, cZone: "High Efficiency", cMind: "Hydro-recovery for the legs. 50m intervals.", sTitle: phase.isDeload ? "Lower Push (Light)" : "Legs (Quad Focus)", sMind: formatGym(phase.isDeload, "<b style='color:var(--bpn-red);'>*Pre-Lift:</b> Pogo Jumps 3x20s / Depth Drops 3x5<br><b>A. Hack squat:</b> 4x8-10<br><b>B. Leg Press:</b> 3x12-15<br><b>C. Walking Lunges:</b> 3x10/side") },
-          { cTitle: "Tempo Run", cDist: `${rTempo} Miles`, cZone: "11:15/mi (Zone 3/4)", cMind: "Check foot pain levels. Find race pace.", sTitle: phase.isDeload ? "Upper Back (Light)" : "Upper (Back Lead)", sMind: formatGym(phase.isDeload, "<b>A. Pendlay Rows:</b> 4x8-10<br><b>B. Weighted Pull-ups:</b> 4xMax<br><b>C. Lat Pulldowns:</b> 3x12-15<br><b>D. Tricep Pushdowns:</b> 3x15") },
-          { cTitle: phase.isDeload ? "Long Bike" : "BRICK SESSION", cDist: phase.isDeload ? `${bLong} Miles` : `${bLong} Mi Bike / ${rBrick} Mi Run`, cZone: "Zone 2", cMind: "Aerobic base building. Practice Transition.", sTitle: phase.isDeload ? "Mobility" : "Chassis Armor", sMind: formatGym(phase.isDeload, "<b>A. Single-Leg RDLs:</b> 3x10/side<br><b>B. Heavy Soleus Raises:</b> 4x15<br><b>C. Banded Clamshells:</b> 3x20/side") }
+          { name: "MON", cTitle: "Rest", cDist: "Active recovery", cZone: "Z1", cMind: "Mobility focus.", sTitle: "Recovery" },
+          { name: "TUE", cTitle: "Swim", cDist: `${sVol/100} x 100yd`, cZone: "Mod", cMind: "Focus on pull.", sTitle: "Legs (Ham)" },
+          { name: "WED", cTitle: "Run", cDist: `${rEasy} Mi`, cZone: "Z2", cMind: "Zone 2 base.", sTitle: "Full Body" },
+          { name: "THU", cTitle: "Bike", cDist: `${(CONFIG.base.bikeDistEasy*scale).toFixed(1)} Mi`, cZone: "Z2", cMind: "Steady spin.", sTitle: "Upper Push" },
+          { name: "FRI", cTitle: "Swim", cDist: `${sVol/50} x 50yd`, cZone: "Sprint", cMind: "Speed work.", sTitle: "Legs (Quad)" },
+          { name: "SAT", cTitle: "Run", cDist: `${rTempo} Mi`, cZone: "Z3", cMind: "Race pace.", sTitle: "Upper Back" },
+          { name: "SUN", cTitle: "Brick", cDist: `${bLong} Mi Bike`, cZone: "Z2", cMind: "Ironman simulation.", sTitle: "Armor" }
         ]
       };
     }
 
-    // --- 4. UI LOGIC & AUTO DATE SYNC ---
-    let currentWeek = 1;
+    function calculateFuel() {
+      const mins = document.getElementById('fuel-time').value;
+      const totalCarbs = (mins / 60) * (document.getElementById('fuel-intensity').value > 7 ? 80 : 60);
+      document.getElementById('res-malto').innerText = Math.round(totalCarbs * 0.6) + "g";
+      document.getElementById('res-fructose').innerText = Math.round(totalCarbs * 0.4) + "g";
+      document.getElementById('res-salt').innerText = Math.round((mins / 60) * 800) + "mg";
+    }
+
     const raceDate = new Date("September 11, 2026").getTime();
-    const msPerWeek = 1000 * 60 * 60 * 24 * 7;
-    // Base Week 1 starts 20 weeks before the race
-    const startDate = raceDate - (20 * msPerWeek); 
+    const startDate = raceDate - (20 * 1000 * 60 * 60 * 24 * 7); 
 
     function initUI() {
       const sel = document.getElementById("week-select");
       for(let i=1; i<=20; i++) {
-        const opt = document.createElement("option");
-        opt.value = i;
-        opt.text = `WEEK ${i}`;
+        let opt = document.createElement("option");
+        opt.value = i; opt.text = `WEEK ${i}`;
         sel.appendChild(opt);
       }
       
       const today = new Date().getTime();
-      const days = Math.max(0, Math.floor((raceDate - today) / (1000 * 60 * 60 * 24)));
-      document.getElementById("countdown").innerText = days + " DAYS TO RACE DAY";
+      document.getElementById("countdown").innerText = Math.max(0, Math.floor((raceDate - today) / (1000 * 60 * 60 * 24))) + " DAYS TO RACE DAY";
       
-      if (today < startDate) {
-          currentWeek = 1; 
-      } else {
-          currentWeek = Math.floor((today - startDate) / msPerWeek) + 1;
-      }
+      let currentWeek = Math.floor((today - startDate) / (1000 * 60 * 60 * 24 * 7)) + 1;
+      sel.value = Math.min(Math.max(currentWeek, 1), 20);
       
-      if (currentWeek > 20) currentWeek = 20;
-      if (currentWeek < 1) currentWeek = 1;
-
-      sel.value = currentWeek;
-
+      updateDashboard(sel.value);
       buildCalendar();
-      updateDashboard(currentWeek);
+      calculateFuel();
     }
 
     function updateWeekDropdown() {
-      const selectedWeek = parseInt(document.getElementById("week-select").value);
-      updateDashboard(selectedWeek);
+      updateDashboard(parseInt(document.getElementById("week-select").value));
     }
 
     function updateDashboard(weekNum) {
@@ -316,71 +267,43 @@
       let scale = Math.pow(CONFIG.scalingFactor, weekNum - 1);
       if (isDeload) scale = scale * CONFIG.deloadDrop;
       
-      const weeklyRun = (CONFIG.weeklyBase.runTotal * scale).toFixed(1);
-      const weeklyBike = (CONFIG.weeklyBase.bikeTotal * scale).toFixed(1);
-      const weeklySwim = Math.round((CONFIG.weeklyBase.swimTotal * scale) / 50) * 50;
-
       document.getElementById("phase-name").innerText = `PHASE: ${plan.phase.name}`;
       document.getElementById("phase-name").style.color = plan.phase.color;
       document.getElementById("phase-obj").innerText = plan.phase.obj;
       
-      const dayNum = new Date().getDay(); 
-      const todayData = plan.days[dayNum];
-      
-      document.getElementById("day-display").innerText = new Date().toLocaleDateString('en-US', { weekday: 'long' }).toUpperCase();
+      const overview = document.getElementById("weekly-overview");
+      overview.innerHTML = "";
+      const currentDayIdx = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1;
+
+      plan.days.forEach((day, idx) => {
+        const dCard = document.createElement("div");
+        dCard.className = `weekly-day-card ${idx === currentDayIdx ? 'active' : ''}`;
+        dCard.innerHTML = `<span class="wd-name">${day.name}</span><span class="wd-work">${day.cTitle}</span>`;
+        overview.appendChild(dCard);
+      });
+
+      const todayData = plan.days[currentDayIdx];
       document.getElementById("cardio-title").innerText = todayData.cTitle;
       document.getElementById("c-dist").innerText = todayData.cDist;
       document.getElementById("c-zone").innerText = todayData.cZone;
       document.getElementById("cardio-mission").innerText = todayData.cMind;
       document.getElementById("gym-title").innerText = todayData.sTitle;
-      document.getElementById("gym-mission").innerHTML = todayData.sMind;
 
-      document.getElementById("vol-title").innerText = `WEEK ${weekNum} ESTIMATED VOLUME`;
-      document.getElementById("vol-run").innerText = `~${weeklyRun} MI`;
-      document.getElementById("vol-bike").innerText = `~${weeklyBike} MI`;
-      document.getElementById("vol-swim").innerText = `~${weeklySwim} YD`;
+      document.getElementById("vol-run").innerText = `~${(CONFIG.weeklyBase.runTotal * scale).toFixed(1)} MI`;
+      document.getElementById("vol-bike").innerText = `~${(CONFIG.weeklyBase.bikeTotal * scale).toFixed(1)} MI`;
+      document.getElementById("vol-swim").innerText = `~${Math.round((CONFIG.weeklyBase.swimTotal * scale) / 50) * 50} YD`;
     }
 
     function buildCalendar() {
       const container = document.getElementById("calendar-container");
       container.innerHTML = "";
-      
-      let currentMonth = -1;
-
       for(let i=1; i<=20; i++) {
-        // Calculate the exact start and end dates for this specific week
-        const wkStartMs = startDate + ((i - 1) * msPerWeek);
-        const wkEndMs = wkStartMs + (6 * 24 * 60 * 60 * 1000); // 6 days later
-        
-        const dStart = new Date(wkStartMs);
-        const dEnd = new Date(wkEndMs);
-
-        // Inject a new Month Header if we crossed into a new month
-        if (dStart.getMonth() !== currentMonth) {
-          currentMonth = dStart.getMonth();
-          const monthName = dStart.toLocaleString('default', { month: 'long', year: 'numeric' });
-          const monthHeader = document.createElement("div");
-          monthHeader.className = "cal-month-header";
-          monthHeader.innerText = monthName.toUpperCase();
-          container.appendChild(monthHeader);
-        }
-
-        const dateString = `${dStart.toLocaleString('default', { month: 'short' })} ${dStart.getDate()} - ${dEnd.toLocaleString('default', { month: 'short' })} ${dEnd.getDate()}`;
         const p = getWeeklyPlan(i);
         const row = document.createElement("div");
         row.className = "cal-row";
-        
-        const sat = p.days[6]; 
-        const fri = p.days[5];
-        
-        row.innerHTML = `
-          <div class="cal-wk" style="background:${p.phase.color};">W${i}</div>
-          <div class="cal-details">
-            <div class="cal-title" style="color:${p.phase.color};">${p.phase.name} PHASE</div>
-            <div class="cal-dates">${dateString}</div>
-            <div class="cal-stats"><b>Bike:</b> ${sat.cDist} | <b>Run:</b> ${fri.cDist}</div>
-          </div>
-        `;
+        row.innerHTML = `<div class="cal-wk" style="background:${p.phase.color};">W${i}</div>
+          <div class="cal-details"><div class="cal-title">${p.phase.name}</div>
+          <div class="cal-stats"><b>Bike:</b> ${p.days[6].cDist} | <b>Run:</b> ${p.days[5].cDist}</div></div>`;
         container.appendChild(row);
       }
     }
@@ -388,7 +311,6 @@
     function showTab(idNum) {
       document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      
       document.getElementById('p' + idNum).classList.add('active');
       document.getElementById('tab' + idNum).classList.add('active');
     }
