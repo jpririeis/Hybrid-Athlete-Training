@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Hybrid Athlete | Command Center</title>
+<title>Ironman 70.3 | Elite Coach Command</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
 <style>
   :root { 
@@ -21,17 +21,16 @@
   h1 { font-family: 'Bebas Neue', sans-serif; font-size: 64px; line-height: 0.85; text-transform: uppercase; font-weight: 900; }
   #countdown { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--bpn-red); text-transform: uppercase; font-weight: 700; margin-top: 5px; display: block; }
   
-  .phase-bar { background: var(--bpn-grey); border-radius: 4px; padding: 10px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; border: 1px solid var(--bpn-light-grey); border-left: 2px solid var(--bpn-red); }
-  .phase-info { display: flex; flex-direction: column; }
-  .phase-name { font-family: 'JetBrains Mono'; font-size: 12px; font-weight: 800; color: var(--text); text-transform: uppercase; }
-  .phase-obj { font-size: 10px; color: var(--muted); margin-top: 2px; }
-  select#week-select { background: var(--bpn-light-grey); color: white; border: none; padding: 5px 10px; font-family: 'JetBrains Mono'; font-size: 11px; border-radius: 4px; outline: none; cursor: pointer;}
-
+  /* Weekly Dashboard */
   .weekly-scroll { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 15px; margin-bottom: 15px; scroll-snap-type: x mandatory; }
   .weekly-day-card { min-width: 85px; background: var(--bpn-grey); padding: 10px; border-radius: 4px; text-align: center; border: 1px solid var(--bpn-light-grey); scroll-snap-align: start;}
-  .weekly-day-card.active { border-color: var(--bpn-red); background: #251010; }
+  .weekly-day-card.active { border-color: var(--bpn-red); background: #251010; border-width: 2px; }
   .wd-name { font-family: 'JetBrains Mono'; font-size: 9px; color: var(--muted); display: block; }
   .wd-work { font-family: 'Bebas Neue'; font-size: 16px; color: #fff; display: block; margin-top: 4px; }
+
+  .phase-bar { background: var(--bpn-grey); border-radius: 4px; padding: 10px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; border-left: 4px solid var(--bpn-red); }
+  .phase-name { font-family: 'JetBrains Mono'; font-size: 12px; font-weight: 800; color: var(--text); text-transform: uppercase; }
+  select#week-select { background: var(--bpn-light-grey); color: white; border: none; padding: 5px 10px; font-family: 'JetBrains Mono'; font-size: 11px; border-radius: 4px; outline: none; cursor: pointer;}
 
   .tabs { display: flex; gap: 2px; background: var(--bpn-grey); padding: 4px; border-radius: 4px; margin-bottom: 20px; }
   .tab-btn { background: transparent; border: none; color: var(--muted); padding: 10px 5px; font-family: 'Inter'; font-size: 10px; font-weight: 700; cursor: pointer; flex: 1; text-transform: uppercase; text-align: center;}
@@ -41,50 +40,32 @@
   
   .card { background: var(--bpn-grey); border-radius: 2px; padding: 20px; margin-bottom: 12px; border-top: 1px solid var(--bpn-light-grey); }
   .tag { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--bpn-red); text-transform: uppercase; font-weight: 800; margin-bottom: 8px; display: block; }
-  .card-title { font-family: 'Bebas Neue', sans-serif; font-size: 32px; color: #fff; line-height: 1; margin-bottom: 5px; letter-spacing: 1px; }
+  .card-title { font-family: 'Bebas Neue', sans-serif; font-size: 34px; color: #fff; line-height: 1; margin-bottom: 8px; letter-spacing: 1px; }
   
-  .check-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #2d2d2d; }
-  .check-row:last-child { border-bottom: none; }
-  .check-row span { font-size: 12px; color: #ddd; }
-  .check-row b { color: var(--bpn-red); font-family: 'JetBrains Mono'; margin-right: 8px; }
-  input[type="checkbox"] { accent-color: var(--bpn-red); width: 18px; height: 18px; cursor: pointer; }
-
   .metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; border-bottom: 1px solid var(--bpn-light-grey); padding-bottom: 15px; }
   .metric { font-family: 'JetBrains Mono'; font-size: 9px; color: var(--muted); text-transform: uppercase; }
-  .metric b { color: var(--text); display: block; font-size: 12px; margin-top: 2px; }
-  .instruction { font-size: 12px; color: #bbb; line-height: 1.5; border-left: 2px solid var(--bpn-red); padding-left: 10px; }
+  .metric b { color: var(--text); display: block; font-size: 14px; margin-top: 2px; }
   
+  .coach-note { background: #000; border-left: 2px solid var(--bpn-red); padding: 12px; font-size: 12px; color: #ddd; line-height: 1.5; margin-top: 10px; font-style: italic; }
   .gym-list { list-style: none; margin-top: 10px; }
-  .gym-list li { font-size: 12px; color: #ddd; margin-bottom: 6px; padding-left: 10px; border-left: 1px solid #444; }
+  .gym-list li { font-size: 13px; color: #ddd; margin-bottom: 8px; padding-left: 10px; border-left: 1px solid #444; }
 
-  .vol-box { background: var(--bpn-red); padding: 15px; border-radius: 2px; margin-top: 20px; }
-  .vol-title { font-family: 'Bebas Neue'; font-size: 20px; color: #fff; border-bottom: 1px solid rgba(255,255,255,0.3); margin-bottom: 10px; }
-  .vol-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; }
-  .vol-item { font-family: 'JetBrains Mono'; font-size: 10px; color: #fff; }
-  .vol-item b { display: block; font-size: 14px; }
-
+  /* Calendar Row Fix */
   .cal-row { display: grid; grid-template-columns: 45px 1fr; margin-bottom: 8px; background: var(--bpn-grey); border-left: 2px solid var(--bpn-light-grey); }
   .cal-wk { display: flex; align-items: center; justify-content: center; font-family: 'Bebas Neue'; font-size: 20px; color: #fff; }
   .cal-details { padding: 12px; }
-  .cal-title { font-family: 'JetBrains Mono'; font-size: 11px; font-weight: 800; text-transform: uppercase; color: #fff; margin-bottom: 2px; }
-
-  .calc-box { background: #000; padding: 15px; border-radius: 4px; margin-top: 10px; }
-  .calc-input { background: #1a1a1a; color: #fff; border: 1px solid var(--bpn-light-grey); padding: 8px; width: 100%; margin: 5px 0 15px 0; font-family: 'JetBrains Mono'; }
-
-  .footer-mantra { text-align: center; margin-top: 30px; font-family: 'Bebas Neue', sans-serif; font-size: 20px; color: var(--bpn-light-grey); letter-spacing: 2px; padding-bottom: 20px; text-transform: uppercase; }
 </style>
 </head>
 <body>
 
   <header>
-    <h1>HYBRID<br>ATHLETE</h1>
-    <span id="countdown">-- DAYS TO RACE DAY</span>
+    <h1>ELITE<br>COACH</h1>
+    <span id="countdown">-- DAYS TO RACE</span>
   </header>
 
   <div class="phase-bar">
     <div class="phase-info">
       <span class="phase-name" id="phase-name">PHASE: BASE</span>
-      <span class="phase-obj" id="phase-obj">Build the Chassis.</span>
     </div>
     <select id="week-select" onchange="updateWeekDropdown()"></select>
   </div>
@@ -92,145 +73,87 @@
   <div class="tabs">
     <button class="tab-btn active" id="tab0" onclick="showTab(0)">Today</button>
     <button class="tab-btn" id="tab2" onclick="showTab(2)">Calendar</button>
-    <button class="tab-btn" id="tab3" onclick="showTab(3)">Armor</button>
     <button class="tab-btn" id="tab1" onclick="showTab(1)">Fueling</button>
   </div>
 
   <div class="panel active" id="p0">
     <div class="weekly-scroll" id="weekly-overview"></div>
 
-    <div class="card" style="border-left: 4px solid #fff; background: #1a1a1a;">
-        <span class="tag" style="color: #fff;">05:00 - 07:30 // Discipline</span>
-        <div class="card-title">MORNING MISSION</div>
-        <div class="check-row"><span><b>05:00</b> Wake Up & Hydrate</span><input type="checkbox"></div>
-        <div class="check-row"><span><b>05:10</b> Scripture Study (20m)</span><input type="checkbox"></div>
-        <div class="check-row"><span><b>05:45</b> Execute Cardio Session</span><input type="checkbox"></div>
-        <div class="check-row"><span><b>07:30</b> Ready / Out the Door</span><input type="checkbox"></div>
-    </div>
-    
     <div class="card" id="cardio-card" style="border-left: 4px solid var(--bpn-red);">
-        <span class="tag">Cardio // Endurance</span>
+        <span class="tag">Coach’s Cardio Prescription</span>
         <div class="card-title" id="cardio-title">--</div>
         <div class="metric-grid">
-            <div class="metric">Details<b><span id="c-dist">--</span></b></div>
-            <div class="metric">Target<b><span id="c-zone">--</span></b></div>
+            <div class="metric">Target Distance<b><span id="c-dist">--</span></b></div>
+            <div class="metric">Intensity/Zone<b><span id="c-zone">--</span></b></div>
         </div>
-        <p id="cardio-mission" class="instruction"></p>
+        <p class="metric" style="color:var(--bpn-red)">Technical Cue:</p>
+        <div id="cardio-cue" style="font-size: 12px; color: #fff; font-weight: 700; margin-bottom: 10px;"></div>
+        <div id="cardio-mission" class="coach-note"></div>
     </div>
 
     <div class="card">
-        <span class="tag" id="strength-tag">Strength // Power</span>
+        <span class="tag">Strength & Structural Integrity</span>
         <div class="card-title" id="gym-title">--</div>
         <ul id="gym-mission" class="gym-list"></ul>
-    </div>
-
-    <div class="vol-box">
-      <div class="vol-title" id="vol-title">ESTIMATED VOLUME</div>
-      <div class="vol-grid">
-          <div class="vol-item">RUN<b id="vol-run">-- MI</b></div>
-          <div class="vol-item">BIKE<b id="vol-bike">-- MI</b></div>
-          <div class="vol-item">SWIM<b id="vol-swim">-- YD</b></div>
-      </div>
     </div>
   </div>
 
   <div class="panel" id="p2"><div id="calendar-container"></div></div>
-  <div class="panel" id="p1">
-    </div>
-  <div class="panel" id="p3">
-     </div>
-
-  <div class="footer-mantra">1% Better Everyday</div>
 
   <script>
     const CONFIG = {
-      scalingFactor: 1.10, deloadDrop: 0.75,
-      base: { runDistLong: 3.1, runDistEasy: 2.0, bikeDistLong: 12.0, bikeDistEasy: 8.5, swimVol: 400 },
-      weeklyBase: { runTotal: 6.6, bikeTotal: 20.5, swimTotal: 1000 }
+      scalingFactor: 1.10,
+      base: { runLong: 3.1, runEasy: 2.0, bikeLong: 12.0, bikeEasy: 8.5, swim: 400 }
     };
 
-    function getPhaseDetails(wk) {
-      const deloads = [4, 8, 12, 16];
-      if (deloads.includes(wk)) return { name: "Deload", color: "#404040", obj: "Flush System. Neutral Week." }; 
-      if (wk <= 8) return { name: "Base", color: "#737373", obj: "Build Chassis. Form focus." }; 
-      if (wk <= 15) return { name: "Build", color: "#990000", obj: "Engine Room. Tempo Push." }; 
-      return { name: "Peak", color: "#ff0000", obj: "Race Ready Simulation." }; 
-    }
-
     function getWeeklyPlan(wk) {
-      const phase = getPhaseDetails(wk);
       const isDeload = [4, 8, 12, 16].includes(wk);
-      let scale = Math.pow(CONFIG.scalingFactor, wk - 1);
+      const scale = isDeload ? Math.pow(CONFIG.scalingFactor, wk - 1) * 0.75 : Math.pow(CONFIG.scalingFactor, wk - 1);
       
-      const rTempo = (CONFIG.base.runDistLong * scale).toFixed(1);
-      const rEasy = (CONFIG.base.runDistEasy * scale).toFixed(1);
-      const bLong = (CONFIG.base.bikeDistLong * scale).toFixed(1);
-      const sVol = Math.round((CONFIG.base.swimVol * scale) / 50) * 50;
+      const rInt = (CONFIG.base.runLong * scale).toFixed(1);
+      const rEasy = (CONFIG.base.runEasy * scale).toFixed(1);
+      const bLong = (CONFIG.base.bikeLong * scale).toFixed(1);
+      const sVol = Math.round((CONFIG.base.swim * scale) / 50) * 50;
 
-      if (!isDeload) {
+      if (isDeload) {
         return {
-          phase: phase,
+          name: "Deload", color: "#444",
           days: [
-            { name: "MON", cTitle: "Recovery", cDist: "Active Mobility", cZone: "Z1", cMind: "Flush system. Prep for Tue impact.", sTitle: "Mobility", sExercises: ["Couch Stretch: 2m/leg", "Pigeon Pose: 2m/leg", "Cat-Cow: 20 reps"] },
-            { name: "TUE", cTitle: "Run Intervals", cDist: `${rTempo} Miles`, cZone: "Z3/4", cMind: "Speed focus. High intensity.", sTitle: "Legs (Ham Focus)", sExercises: ["RDLs: 4x8", "Hamstring Curls: 3x15", "Tibialis Raises: 3x20"] },
-            { name: "WED", cTitle: "Swim Endurance", cDist: `${Math.round(sVol/100)} x 100yd`, cZone: "Mod", cMind: "Long strokes. hydro-recovery.", sTitle: "Full Body", sExercises: ["DB Snatch: 3x8", "Bird-Dogs: 3x12", "Plank: 3x60s"] },
-            { name: "THU", cTitle: "Aerobic Bike", cDist: `${(CONFIG.base.bikeDistEasy*scale).toFixed(1)} Miles`, cZone: "Z2", cMind: "Steady cadence. Aerobic engine.", sTitle: "Upper Push", sExercises: ["Flat Bench: 4x6", "Dips: 3xMax", "Hammer Curls: 3x12"] },
-            { name: "FRI", cTitle: "Easy Run", cDist: `${rEasy} Miles`, cZone: "Z2", cMind: "Nasal breathing base.", sTitle: "Legs (Quad Focus)", sExercises: ["Hack Squat: 4x8", "Leg Press: 3x12", "Walking Lunges: 3x10/side"] },
-            { name: "SAT", cTitle: "BRICK SESSION", cDist: `${bLong} Mi Bike / 1.5 Mi Run`, cZone: "Z2/3", cMind: "Transition prep.", sTitle: "Chassis Armor", sExercises: ["Single-Leg RDLs: 3x10", "Heavy Soleus Raises: 4x15"] },
-            { name: "SUN", cTitle: "Swim Sprints", cDist: `${Math.round(sVol/50)} x 50yd`, cZone: "Sprint", cMind: "Speed work. CNS flush.", sTitle: "Active Rest", sExercises: ["Foam Roll: 15m", "Nerve Flossing: 5m"] }
-          ]
-        };
-      } else {
-        // DELOAD WEEK MAPPING (As discussed)
-        return {
-          phase: phase,
-          days: [
-            { name: "MON", cTitle: "Swim (Deload)", cDist: "3 x 100yd", cZone: "V. Easy", cMind: "Technique drills only.", sTitle: "Lower Pull (Deload)", sExercises: ["Light RDLs: 2x10", "Mobility work"] },
-            { name: "TUE", cTitle: "Run (Deload)", cDist: "1.5 Miles", cZone: "Zone 2", cMind: "Heart rate cap: 135 bpm.", sTitle: "Core Focus", sExercises: ["Deadbugs: 3x15", "Plank: 3x45s", "Bird-Dogs: 3x12"] },
-            { name: "WED", cTitle: "Bike (Deload)", cDist: "30 Mins", cZone: "Zone 1/2", cMind: "Coffee spin. No hills.", sTitle: "Upper Push (Deload)", sExercises: ["Light Press: 2x12", "Dips (Assisted): 2x10"] },
-            { name: "THU", cTitle: "Swim (Deload)", cDist: "4 x 50yd", cZone: "Drills", cMind: "Focus on rotation/catch.", sTitle: "Lower Push (Deload)", sExercises: ["Light Squat: 2x10", "Lunges (BW): 2x10"] },
-            { name: "FRI", cTitle: "Run (Deload)", cDist: "2 Miles", cZone: "Easy", cMind: "No tempo. Stay light.", sTitle: "Upper Back (Deload)", sExercises: ["Face Pulls: 2x15", "Light Rows: 2x12"] },
-            { name: "SAT", cTitle: "Long Bike (Deload)", cDist: "9 Miles", cZone: "Zone 2", cMind: "No brick run today.", sTitle: "Mobility Only", sExercises: ["Full Body Flow: 20m"] },
-            { name: "SUN", cTitle: "Full Rest", cDist: "Rest Day", cZone: "Z0", cMind: "No output. Recover.", sTitle: "Rest", sExercises: ["Total CNS Reset"] }
+            { name: "MON", cTitle: "Recovery Swim", cDist: "300 Yards", cZone: "Z1", cCue: "Focus on finger entry.", cMind: "Today is about blood flow. No timing, just move.", sTitle: "Mobility", sEx: ["Couch Stretch: 2m/leg", "Cat-Cow: 20 reps"] },
+            { name: "TUE", cTitle: "Flush Run", cDist: "1.5 Miles", cZone: "Z2", cCue: "Nasal breathing only.", cMind: "Keep the heart rate capped. Don't chase a pace.", sTitle: "Core Focus", sEx: ["Deadbugs: 3x15", "Plank: 3x45s"] },
+            { name: "WED", cTitle: "Coffee Spin", cDist: "30 Mins", cZone: "Z1", cCue: "High cadence (95+).", cMind: "Legs should feel better after this than before.", sTitle: "Upper Light", sEx: ["Face Pulls: 2x15", "Pushups: 2x15"] },
+            { name: "THU", cTitle: "Technique Swim", cDist: "400 Yards", cZone: "Drills", cCue: "High elbow catch.", cMind: "Exaggerate your rotation. Speed doesn't matter today.", sTitle: "Lower Light", sEx: ["BW Squats: 2x20", "Lunges: 2x10"] },
+            { name: "FRI", cTitle: "Aerobic Maintenance", cDist: "2 Miles", cZone: "Z2", cCue: "Short, choppy strides.", cMind: "Focus on soft foot landings. Avoid concrete if possible.", sTitle: "Upper Light", sEx: ["Pull-downs: 2x12"] },
+            { name: "SAT", cTitle: "Social Bike", cDist: "8 Miles", cZone: "Z2", cCue: "Relaxed grip on bars.", cMind: "No brick run. Just enjoy the miles.", sTitle: "Full Recovery", sEx: ["Total Rest"] },
+            { name: "SUN", cTitle: "Full Rest", cDist: "0 Miles", cZone: "OFF", cCue: "Mental Reset.", cMind: "Log your sleep and food. Get ready for the next block.", sTitle: "Rest", sEx: ["Family/Rest"] }
           ]
         };
       }
+
+      return {
+        name: wk <= 8 ? "Base" : "Build", color: wk <= 8 ? "#737373" : "#ff0000",
+        days: [
+          { name: "MON", cTitle: "Active Recovery", cDist: "Mobility Flow", cZone: "Z1", cCue: "Deep belly breathing.", cMind: "Pre-hab is more important than the workout. Don't skip the poses.", sTitle: "Structural Armor", sEx: ["Pigeon Pose: 2m", "Single-Leg RDL: 3x10"] },
+          { name: "TUE", cTitle: "Run Intervals (Speed)", cDist: `${rInt} Miles`, cZone: "Z4 (85-90% HR)", cCue: "Drive knees through.", cMind: "The goal is to push your lactic threshold. Recover fully between sets.", sTitle: "Legs (Ham Focus)", sEx: ["RDLs: 4x8", "Tib Raises: 3x20"] },
+          { name: "WED", cTitle: "Endurance Swim", cDist: `${sVol} Yards`, cZone: "Mod/Steady", cCue: "Bilateral breathing.", cMind: "Find a rhythm. This builds the lung capacity for the open water.", sTitle: "Full Body Power", sEx: ["DB Snatch: 3x8", "Bird-Dogs: 3x12"] },
+          { name: "THU", cTitle: "Aerobic Threshold Bike", cDist: `${(CONFIG.base.bikeEasy*scale).toFixed(1)} Miles`, cZone: "Z2 (Aerobic)", cCue: "Engage glutes on hills.", cMind: "This is your 'fat burning' engine. Stay strictly in Zone 2.", sTitle: "Upper Body Push", sEx: ["Flat Bench: 4x6", "Dips: 3xMax"] },
+          { name: "FRI", cTitle: "Leg Resilience Run", cDist: `${rEasy} Miles`, cZone: "Z2 (Steady)", cCue: "Mid-foot strike.", cMind: "Builds the durability needed for the half-marathon in September.", sTitle: "Legs (Quad Focus)", sEx: ["Hack Squat: 4x8", "Leg Press: 3x12"] },
+          { name: "SAT", cTitle: "BRICK (Transition Focus)", cDist: `${bLong} Mi Bike / 1.5 Mi Run`, cZone: "Race Pace", cCue: "Quick T2 transition.", cMind: "Get the running shoes on immediately. Teach the legs to run while heavy.", sTitle: "Armor", sEx: ["Soleus Raises: 4x15"] },
+          { name: "SUN", cTitle: "Threshold Swim Sprints", cDist: `${Math.round(sVol/2)} Yards`, cZone: "Sprint/Fast", cCue: "Aggressive kick.", cMind: "High intensity in the water to flush the legs without impact.", sTitle: "Active Rest", sEx: ["Foam Roll: 15m"] }
+        ]
+      };
     }
 
-    // UI Initializers and Update functions...
-    // (Included the updateDashboard and buildCalendar logic from previous blocks to ensure continuity)
-
-    const raceDate = new Date("September 11, 2026").getTime();
-    const msPerWeek = 1000 * 60 * 60 * 24 * 7;
-    const startDate = raceDate - (20 * msPerWeek); 
-
-    function initUI() {
-      const sel = document.getElementById("week-select");
-      for(let i=1; i<=20; i++) {
-        let opt = document.createElement("option"); opt.value = i; opt.text = `WEEK ${i}`; sel.appendChild(opt);
-      }
-      const today = new Date().getTime();
-      document.getElementById("countdown").innerText = Math.max(0, Math.floor((raceDate - today) / (1000 * 60 * 60 * 24))) + " DAYS TO RACE DAY";
-      let currentWeek = Math.floor((today - startDate) / msPerWeek) + 1;
-      sel.value = Math.min(Math.max(currentWeek, 1), 20);
-      updateDashboard(sel.value); buildCalendar();
-    }
-
-    function updateWeekDropdown() { updateDashboard(parseInt(document.getElementById("week-select").value)); }
-
+    // UI LOGIC
     function updateDashboard(weekNum) {
       const plan = getWeeklyPlan(weekNum);
-      const isDeload = [4, 8, 12, 16].includes(weekNum);
-      let scale = Math.pow(CONFIG.scalingFactor, weekNum - 1);
-      if (isDeload) scale = scale * CONFIG.deloadDrop;
-      
-      document.getElementById("phase-name").innerText = `PHASE: ${plan.phase.name}`;
-      document.getElementById("phase-name").style.color = plan.phase.color;
-      document.getElementById("phase-obj").innerText = plan.phase.obj;
+      const currentDayIdx = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1;
+      const todayData = plan.days[currentDayIdx];
+
+      document.getElementById("phase-name").innerText = `PHASE: ${plan.name} | WEEK ${weekNum}`;
+      document.getElementById("phase-name").style.color = plan.color;
       
       const overview = document.getElementById("weekly-overview"); overview.innerHTML = "";
-      const currentDayIdx = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1;
-      
       plan.days.forEach((day, idx) => {
         const dCard = document.createElement("div");
         dCard.className = `weekly-day-card ${idx === currentDayIdx ? 'active' : ''}`;
@@ -238,40 +161,44 @@
         overview.appendChild(dCard);
       });
 
-      const todayData = plan.days[currentDayIdx];
       document.getElementById("cardio-title").innerText = todayData.cTitle;
       document.getElementById("c-dist").innerText = todayData.cDist;
       document.getElementById("c-zone").innerText = todayData.cZone;
+      document.getElementById("cardio-cue").innerText = todayData.cCue;
       document.getElementById("cardio-mission").innerText = todayData.cMind;
+      
       document.getElementById("gym-title").innerText = todayData.sTitle;
-      
       const gymList = document.getElementById("gym-mission"); gymList.innerHTML = "";
-      todayData.sExercises.forEach(ex => { const li = document.createElement("li"); li.innerText = ex; gymList.appendChild(li); });
-      
-      // Volume HUD
-      document.getElementById("vol-run").innerText = `~${(CONFIG.weeklyBase.runTotal * scale).toFixed(1)} MI`;
-      document.getElementById("vol-bike").innerText = `~${(CONFIG.weeklyBase.bikeTotal * scale).toFixed(1)} MI`;
-      document.getElementById("vol-swim").innerText = `~${Math.round((CONFIG.weeklyBase.swimTotal * scale) / 50) * 50} YD`;
+      todayData.sEx.forEach(ex => { const li = document.createElement("li"); li.innerText = ex; gymList.appendChild(li); });
     }
 
     function buildCalendar() {
       const container = document.getElementById("calendar-container"); container.innerHTML = "";
+      const raceDate = new Date("September 11, 2026").getTime();
+      const startDate = raceDate - (20 * 7 * 24 * 60 * 60 * 1000);
+
       for(let i=1; i<=20; i++) {
         const p = getWeeklyPlan(i); const row = document.createElement("div"); row.className = "cal-row";
-        row.innerHTML = `<div class="cal-wk" style="background:${p.phase.color};">W${i}</div>
-          <div class="cal-details"><div class="cal-title" style="color:${p.phase.color}">${p.phase.name}</div>
-          <div class="cal-stats"><b>Sat:</b> ${p.days[5].cDist} | <b>Tue:</b> ${p.days[1].cDist}</div></div>`;
+        row.innerHTML = `<div class="cal-wk" style="background:${p.color};">W${i}</div>
+          <div class="cal-details"><b>Sat Brick:</b> ${p.days[5].cDist} | <b>Tue Speed:</b> ${p.days[1].cDist}</div>`;
         container.appendChild(row);
       }
     }
 
-    function showTab(idNum) {
-      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      document.getElementById('p' + idNum).classList.add('active');
-      document.getElementById('tab' + idNum).classList.add('active');
+    function init() {
+      const sel = document.getElementById("week-select");
+      for(let i=1; i<=20; i++) { let opt = document.createElement("option"); opt.value = i; opt.text = `WEEK ${i}`; sel.appendChild(opt); }
+      const raceDate = new Date("September 11, 2026").getTime();
+      const today = new Date().getTime();
+      document.getElementById("countdown").innerText = Math.max(0, Math.floor((raceDate - today) / (1000 * 60 * 60 * 24))) + " DAYS TO RACE";
+      sel.value = Math.min(Math.max(Math.floor((today - (raceDate - (20 * 7 * 24 * 60 * 60 * 1000))) / (7 * 24 * 60 * 60 * 1000)) + 1, 1), 20);
+      updateDashboard(sel.value); buildCalendar();
     }
-    initUI();
+
+    function updateWeekDropdown() { updateDashboard(parseInt(document.getElementById("week-select").value)); }
+    function showTab(n) { document.querySelectorAll('.panel').forEach(p => p.classList.remove('active')); document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); document.getElementById('p'+n).classList.add('active'); document.getElementById('tab'+n).classList.add('active'); }
+    
+    init();
   </script>
 </body>
 </html>
