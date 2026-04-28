@@ -3,13 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Ironman 70.3 | Pro-Coach Command</title>
+<title>Ironman 70.3 | Elite Command Center</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
 <style>
-  :root { 
-    --bpn-red: #ff0000; --bpn-black: #0e0e0e; --bpn-grey: #1a1a1a; 
-    --bpn-light-grey: #2d2d2d; --text: #ffffff; --muted: #888888; 
-  }
+  :root { --bpn-red: #ff0000; --bpn-black: #0e0e0e; --bpn-grey: #1a1a1a; --bpn-light-grey: #2d2d2d; --text: #ffffff; --muted: #888888; }
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   body { background: var(--bpn-black); color: var(--text); font-family: 'Inter', sans-serif; padding: 20px; max-width: 500px; margin: 0 auto; }
   header { text-align: left; margin-bottom: 15px; border-left: 4px solid var(--bpn-red); padding-left: 15px; }
@@ -20,42 +17,87 @@
   .weekly-day-card.active { border-color: var(--bpn-red); background: #251010; border-width: 2px; }
   .wd-name { font-family: 'JetBrains Mono'; font-size: 9px; color: var(--muted); display: block; }
   .wd-work { font-family: 'Bebas Neue'; font-size: 16px; color: #fff; display: block; margin-top: 4px; }
+  .tabs { display: flex; gap: 2px; background: var(--bpn-grey); padding: 4px; border-radius: 4px; margin-bottom: 20px; }
+  .tab-btn { background: transparent; border: none; color: var(--muted); padding: 10px 5px; font-family: 'Inter'; font-size: 10px; font-weight: 700; cursor: pointer; flex: 1; text-transform: uppercase; text-align: center;}
+  .tab-btn.active { background: var(--bpn-light-grey); color: #fff; }
+  .panel { display: none; } .panel.active { display: block; }
   .card { background: var(--bpn-grey); border-radius: 2px; padding: 20px; margin-bottom: 12px; border-top: 1px solid var(--bpn-light-grey); border-left: 4px solid var(--bpn-red); }
   .tag { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--bpn-red); text-transform: uppercase; font-weight: 800; margin-bottom: 8px; display: block; }
   .card-title { font-family: 'Bebas Neue', sans-serif; font-size: 34px; color: #fff; line-height: 1; margin-bottom: 8px; letter-spacing: 1px; }
+  .check-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #2d2d2d; }
+  .check-row b { color: var(--bpn-red); font-family: 'JetBrains Mono'; margin-right: 8px; }
   .interval-box { background: #000; padding: 12px; margin: 10px 0; border-radius: 4px; border: 1px solid var(--bpn-light-grey); }
   .interval-row { display: flex; justify-content: space-between; font-family: 'JetBrains Mono'; font-size: 12px; margin-bottom: 5px; }
   .interval-row b { color: var(--bpn-red); }
   .coach-note { font-size: 12px; color: #aaa; line-height: 1.5; font-style: italic; margin-top: 10px; padding-top: 10px; border-top: 1px solid #333; }
   .gym-list { list-style: none; margin-top: 10px; }
   .gym-list li { font-size: 13px; color: #ddd; margin-bottom: 8px; padding-left: 10px; border-left: 1px solid var(--bpn-red); }
+  input[type="checkbox"] { accent-color: var(--bpn-red); width: 18px; height: 18px; }
+  .calc-box { background: #000; padding: 15px; border-radius: 4px; margin-top: 10px; }
+  .calc-input { background: #1a1a1a; color: #fff; border: 1px solid var(--bpn-light-grey); padding: 8px; width: 100%; margin: 5px 0 15px 0; font-family: 'JetBrains Mono'; }
 </style>
 </head>
 <body>
   <header><h1>ELITE<br>COMMAND</h1><span id="countdown">-- DAYS TO RACE</span></header>
   <div id="weekly-overview" class="weekly-scroll"></div>
-  <div class="panel active">
-    <div class="card"><span class="tag">Cardio Strategy</span><div class="card-title" id="c-title">--</div><div class="interval-box" id="c-intervals"></div><div id="c-cue" style="font-size: 11px; font-weight: 700; color: #fff; text-transform: uppercase;"></div><div id="c-note" class="coach-note"></div></div>
-    <div class="card" style="border-left-color: #fff;"><span class="tag" style="color:#fff;">Strength Focus</span><div class="card-title" id="s-title">--</div><ul id="s-list" class="gym-list"></ul></div>
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab(0)">Today</button>
+    <button class="tab-btn" onclick="showTab(1)">Fueling</button>
+    <button class="tab-btn" onclick="showTab(2)">Armor</button>
   </div>
+
+  <div class="panel active" id="p0">
+    <div class="card" style="border-left-color: #fff; background: #111;">
+      <span class="tag" style="color: #fff;">05:00 - 07:30 // Morning Mission</span>
+      <div class="check-row"><span><b>05:00</b> Wake Up & Salt Water</span><input type="checkbox"></div>
+      <div class="check-row"><span><b>05:10</b> Scripture Study (20m)</span><input type="checkbox"></div>
+      <div class="check-row"><span><b>05:45</b> Execute Cardio Session</span><input type="checkbox"></div>
+      <div class="check-row" style="border:none"><span><b>07:30</b> Ready for Work</span><input type="checkbox"></div>
+    </div>
+    <div class="card"><span class="tag">Cardio Prescr.</span><div class="card-title" id="c-title">--</div><div class="interval-box" id="c-intervals"></div><div id="c-cue" style="font-size: 11px; font-weight: 700; color: #fff;"></div><div id="c-note" class="coach-note"></div></div>
+    <div class="card" style="border-left-color: #fff;"><span class="tag" style="color:#fff;">Muscle Maintenance</span><div class="card-title" id="s-title">--</div><ul id="s-list" class="gym-list"></ul></div>
+  </div>
+
+  <div class="panel" id="p1">
+    <div class="card"><span class="tag">Tool // Intra-Workout</span><div class="card-title">FUEL CALCULATOR</div>
+      <div class="calc-box">
+        <label style="font-size: 10px; color: var(--muted);">Duration (Mins)</label><input type="number" id="f-time" class="calc-input" value="60" oninput="calcFuel()">
+        <label style="font-size: 10px; color: var(--muted);">Intensity (1-10)</label><input type="number" id="f-int" class="calc-input" value="5" oninput="calcFuel()">
+        <div class="interval-row"><span>Maltodextrin</span><b id="res-m">--g</b></div>
+        <div class="interval-row"><span>Fructose</span><b id="res-f">--g</b></div>
+        <div class="interval-row"><span>Electrolytes</span><b id="res-s">800mg</b></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel" id="p2"><div class="card"><span class="tag">Armor Protocols</span><div class="card-title">IMPACT INTEGRITY</div><ul class="gym-list"><li><b>Pogo Jumps:</b> 3x30s</li><li><b>Tibialis Raises:</b> 3x20</li><li><b>Soleus Raises:</b> 4x15</li></ul></div></div>
+
   <script>
     const CONFIG = { scaling: 1.10, base: { run: 2.0, bike: 12.0, swim: 400 } };
     let selectedIdx = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1;
 
     function getPlan(wk) {
       const isDeload = [4,8,12,16].includes(wk);
-      const scale = isDeload ? Math.pow(CONFIG.scaling, wk-1) * 0.75 : Math.pow(CONFIG.scaling, wk-1);
-      const sVol = Math.round((CONFIG.base.swim * scale)/50)*50;
+      const scale = isDeload ? Math.pow(CONFIG.scaling, wk-1)*0.75 : Math.pow(CONFIG.scaling, wk-1);
+      const sV = Math.round((CONFIG.base.swim * scale)/50)*50;
       
       return { days: [
-        { name: "MON", ct: "Swim: Lat Focus", ci: [{l: "Volume", v: `${sVol}yd`}, {l: "Set", v: `${Math.round(sVol/100)}x100yd`}], cue: "Reach & Rotate", note: "Keep lats fresh for the pull. Focus on a long entry.", st: "Lower Body Pull", sl: ["Deadlift: 3x5 (Heavy)", "RDL: 3x10", "Tib Raises: 3x20"] },
-        { name: "TUE", ct: "Run: Zone 2", ci: [{l: "Distance", v: `${(2*scale).toFixed(1)}mi`}, {l: "Pace", v: "12:30-13:30"}], cue: "Nasal Breathing", note: "Build the engine. Aerobic base is the priority today.", st: "Full Body & Core", sl: ["Power Cleans: 3x3", "Plank: 3x60s", "Deadbugs: 3x15"] },
-        { name: "WED", ct: "Bike: Zone 2", ci: [{l: "Duration", v: "45-60m"}, {l: "Speed", v: "11-12mph"}], cue: "90+ RPM Cadence", note: "Steady spin. Flush legs from Tuesday run.", st: "Upper Body (Chest)", sl: ["Bench Press: 3x5", "Incline DB: 3x10", "Dips: 3xMax"] },
-        { name: "THU", ct: "Swim: Efficiency", ci: [{l: "Volume", v: `${sVol}yd`}, {l: "Set", v: `${Math.round(sVol/50)}x50yd`}], cue: "High Elbow Catch", note: "Focus on technical drills. High efficiency in the water.", st: "Lower Body Push", sl: ["Back Squat: 3x5", "Walking Lunges: 3x10/side", "Pogo Jumps: 3x20s"] },
-        { name: "FRI", ct: "Run: 5K Tempo", ci: [{l: "Distance", v: "3.1mi"}, {l: "Effort", v: "8/10 Intensity"}], cue: "Drive the Knees", note: "Simulate race intensity. This is where the snap comes from.", st: "Upper Body (Back)", sl: ["Weighted Pull-ups: 3xMax", "Bent Over Rows: 3x8", "Face Pulls: 3x15"] },
-        { name: "SAT", ct: "Long Bike + Brick", ci: [{l: "Bike", v: `${(12*scale).toFixed(1)}mi`}, {l: "Walk", v: "10m Brick"}], cue: "Aero Position Practice", note: "Time in the saddle. Practice your fueling on the bike.", st: "Functional Stability", sl: ["Single Leg RDL: 3x10", "Soleus Raises: 4x15", "Banded Clamshells: 3x20"] },
-        { name: "SUN", ct: "Active Recovery", ci: [{l: "Type", v: "Walk"}, {l: "Duration", v: "20m"}], cue: "Decompress", note: "Total system reset. No heavy output.", st: "Mobility / Recovery", sl: ["Couch Stretch: 2m/leg", "Pigeon Pose: 2m/leg", "Foam Roll: 10m"] }
+        { name: "MON", ct: "Swim: Lat Focus", ci: [{l: "Volume", v: `${sV}yd`}, {l: "Set", v: `${Math.round(sV/100)}x100yd`}], cue: "Early Arm Catch", note: "Keep lats engaged. Muscle focus: Upper back and serratus.", st: "Lower Body Pull (Heavy)", sl: ["Deadlift: 3x5 (Heavy)", "RDL: 3x10 (Stretch focus)", "Leg Curls: 3x12", "Face Pulls: 3x15", "Calf Raises: 4x15"] },
+        { name: "TUE", ct: "Run: Zone 2", ci: [{l: "Dist", v: `${(2*scale).toFixed(1)}mi`}, {l: "Pace", v: "13:00/mi"}], cue: "Nasal Only", note: "Base building. Don't let your HR spike.", st: "Full Body & Engine", sl: ["Power Clean: 3x3", "DB Bench: 3x10", "Bulgarian Split Squat: 3x8/leg", "Plank: 3x60s", "Deadbugs: 3x20"] },
+        { name: "WED", ct: "Bike: Zone 2", ci: [{l: "Dur", v: "60m"}, {l: "Cadence", v: "90 RPM"}], cue: "Quiet Upper Body", note: "Endurance focus. Keep the legs moving consistently.", st: "Upper Body Push (Hypertrophy)", sl: ["Bench Press: 3x5", "Incline DB: 3x10", "Lateral Raises: 3x15", "Dips: 3xMax", "Skull Crushers: 3x12"] },
+        { name: "THU", ct: "Swim: Efficiency", ci: [{l: "Volume", v: `${sV}yd`}, {l: "Sets", v: `${Math.round(sV/50)}x50yd`}], cue: "Streamline Focus", note: "Drill-heavy. Efficiency over speed today.", st: "Lower Body Push (Strength)", sl: ["Back Squat: 3x5", "Leg Press: 3x12", "Walking Lunges: 3x10/side", "Tib Raises: 3x20", "Pogo Jumps: 3x30s"] },
+        { name: "FRI", ct: "Run: 5K Tempo", ci: [{l: "Dist", v: "3.1mi"}, {l: "Target", v: "Race Intensity"}], cue: "Short Ground Contact", note: "Simulating the back half of the 70.3.", st: "Upper Body Pull (Strength)", sl: ["Weighted Pull-ups: 3xMax", "Pendlay Rows: 3x8", "Chest Supported Row: 3x12", "Bicep Curls: 3x12", "Reverse Flyes: 3x15"] },
+        { name: "SAT", ct: "Long Bike + Brick", ci: [{l: "Bike", v: `${(12*scale).toFixed(1)}mi`}, {l: "Walk", v: "15m Brick"}], cue: "Fuel Every 45m", note: "Practice your race-day digestion system.", st: "Functional Stabil.", sl: ["Single Leg RDL: 3x12", "Clamshells: 3x20", "Bird-Dog: 3x15", "Hanging Leg Raises: 3x12", "Copenhagen Plank: 3x30s"] },
+        { name: "SUN", ct: "Active Reset", ci: [{l: "Type", v: "Walk"}, {l: "Time", v: "30m"}], cue: "Relax Shoulders", note: "System reset. Zero intensity. Family time.", st: "Full Mobility", sl: ["Couch Stretch: 3m/leg", "Pigeon Pose: 3m/leg", "Thoracic Rotation: 20/side", "Ankle Circles: 1m", "Foam Roll: 15m"] }
       ]};
+    }
+
+    function calcFuel() {
+      const t = document.getElementById('f-time').value;
+      const i = document.getElementById('f-int').value;
+      const total = (t/60) * (i > 7 ? 90 : 60);
+      document.getElementById('res-m').innerText = Math.round(total*0.6)+'g';
+      document.getElementById('res-f').innerText = Math.round(total*0.4)+'g';
     }
 
     function updateView(idx) {
@@ -79,10 +121,12 @@
       const race = new Date("September 11, 2026").getTime();
       document.getElementById("countdown").innerText = Math.max(0, Math.floor((race - new Date().getTime()) / (1000*60*60*24))) + " DAYS TO RACE";
       const sel = document.createElement('select'); sel.id = "wk-sel"; sel.onchange = () => updateView(selectedIdx);
+      sel.className = "calc-input"; sel.style.marginTop = "10px";
       for(let i=1; i<=20; i++) { let o = document.createElement('option'); o.value = i; o.text = `WEEK ${i}`; sel.appendChild(o); }
       document.querySelector('header').appendChild(sel);
-      updateView(selectedIdx);
+      updateView(selectedIdx); calcFuel();
     }
+    function showTab(n) { document.querySelectorAll('.panel').forEach(p => p.classList.remove('active')); document.getElementById('p'+n).classList.add('active'); }
     init();
   </script>
 </body>
