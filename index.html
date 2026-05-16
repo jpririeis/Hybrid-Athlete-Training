@@ -118,14 +118,40 @@
     }
 
     function init() {
-      const race = new Date("September 11, 2026").getTime();
+      const race = new Date("September 13, 2026").getTime();
       document.getElementById("countdown").innerText = Math.max(0, Math.floor((race - new Date().getTime()) / (1000*60*60*24))) + " DAYS TO RACE";
-      const sel = document.createElement('select'); sel.id = "wk-sel"; sel.onchange = () => updateView(selectedIdx);
-      sel.className = "calc-input"; sel.style.marginTop = "10px";
-      for(let i=1; i<=20; i++) { let o = document.createElement('option'); o.value = i; o.text = `WEEK ${i}`; sel.appendChild(o); }
+      
+      // Calculate real current week based on March 30, 2026 start date
+      const startDate = new Date("March 30, 2026").getTime();
+      const today = new Date().getTime();
+      let calculatedWeek = 1;
+      
+      if (today > startDate) {
+        const daysPassed = Math.floor((today - startDate) / (1000*60*60*24));
+        calculatedWeek = Math.floor(daysPassed / 7) + 1;
+      }
+      // Keep it within the 20-week boundary bounds
+      calculatedWeek = Math.min(Math.max(calculatedWeek, 1), 20);
+
+      const sel = document.createElement('select'); 
+      sel.id = "wk-sel"; 
+      sel.onchange = () => updateView(selectedIdx);
+      sel.className = "calc-input"; 
+      sel.style.marginTop = "10px";
+      
+      for(let i=1; i<=20; i++) { 
+        let o = document.createElement('option'); 
+        o.value = i; 
+        o.text = `WEEK ${i}`; 
+        if(i === calculatedWeek) { o.selected = true; } // Automatically select current training week
+        sel.appendChild(o); 
+      }
+      
       document.querySelector('header').appendChild(sel);
-      updateView(selectedIdx); calcFuel();
+      updateView(selectedIdx); 
+      calcFuel();
     }
+    
     function showTab(n) { document.querySelectorAll('.panel').forEach(p => p.classList.remove('active')); document.getElementById('p'+n).classList.add('active'); }
     init();
   </script>
