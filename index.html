@@ -60,11 +60,10 @@
 
   <div id="main-panel">
     <div class="card" style="border-left-color: #fff; background: #111;">
-      <span class="tag" style="color: #fff;">05:00 - 07:30 // Morning Mission</span>
+      <span class="tag" style="color: #fff;">05:00 - 06:30 // Morning Engine</span>
       <div class="check-row"><span><b>05:00</b> Wake Up & Salt Water</span><input type="checkbox"></div>
       <div class="check-row"><span><b>05:10</b> Scripture Study (20m)</span><input type="checkbox"></div>
-      <div class="check-row"><span><b>05:45</b> Execute Cardio Session</span><input type="checkbox"></div>
-      <div class="check-row" style="border:none"><span><b>07:30</b> Ready for Work</span><input type="checkbox"></div>
+      <div class="check-row"><span><b>05:30</b> Execute Cardio Session</span><input type="checkbox"></div>
     </div>
     
     <div class="card">
@@ -76,8 +75,8 @@
       <div id="c-note" class="coach-note"></div>
     </div>
     
-    <div class="card" style="border-left-color: #fff;">
-      <span class="tag" style="color:#fff;">Muscle Maintenance & Armor</span>
+    <div class="card" style="border-left-color: #fff; background: #111;">
+      <span class="tag" style="color:#fff;">12:00 - 12:45 // Midday Armor</span>
       <div class="card-title" id="s-title">--</div>
       <div class="fuel-box" id="s-fuel" style="border-color: #fff; background: rgba(255,255,255,0.05);">--</div>
       <ul id="s-list" class="gym-list"></ul>
@@ -85,19 +84,19 @@
   </div>
 
   <script>
-    const CONFIG = { scaling: 1.10, base: { run: 2.0, bike: 12.0, swim: 400 } };
+    // Updated Baselines based on accurate data limits
+    const CONFIG = { scaling: 1.10, base: { run: 4.0, bike: 15.0, swim: 400 } };
     let selectedIdx = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1;
 
-    // Endurance Cardio Fuel
+    // 1:0.8 Ratio for endurance
     function calculateCardioFuelParams(t, i) {
       const total = (t/60) * (i > 7 ? 90 : 60);
       return `<span>Intra-Workout Fuel</span><b>${Math.round(total*0.6)}g Malto / ${Math.round(total*0.4)}g Fruct</b>`;
     }
 
-    // Strength Training Fuel
+    // Zero Carb, Electrolyte focus for gym
     function calculateStrengthFuelParams() {
-      // Baseline placeholder for strength sessions
-      return `<span>Strength Stack</span><b style="color:#fff;">5g Creatine / 800mg Electrolytes</b>`;
+      return `<span>Cellular Hydration</span><b style="color:#fff;">Custom Bulk Electrolyte Mix</b>`;
     }
 
     function getPlan(wk) {
@@ -105,25 +104,31 @@
       const scale = isDeload ? Math.pow(CONFIG.scaling, wk-1)*0.75 : Math.pow(CONFIG.scaling, wk-1);
       
       const sV = Math.round((CONFIG.base.swim * scale)/50)*50;
-      const runMi = (2 * scale).toFixed(1);
-      const bikeMi = (12 * scale).toFixed(1);
+      const runMi = (CONFIG.base.run * scale).toFixed(1);
+      const bikeMi = (CONFIG.base.bike * scale).toFixed(1);
       
       const weeklyTotals = {
         swim: `${sV * 2} YD`,
-        bike: `${(parseFloat(bikeMi) + 16).toFixed(1)} MI`,
+        bike: `${(parseFloat(bikeMi) + parseFloat((bikeMi*0.5).toFixed(1))).toFixed(1)} MI`,
         run: `${(parseFloat(runMi) + 3.1).toFixed(1)} MI`
       };
 
       return { 
         totals: weeklyTotals,
         days: [
-        { name: "MON", ct: "Swim: Lat Focus", ci: [{l: "Volume", v: `${sV}yd`}, {l: "Set", v: `${Math.round(sV/100)}x100yd`}], cue: "Early Arm Catch", note: "Keep lats engaged. Muscle focus: Upper back and serratus.", st: "Lower Body Pull (Heavy)", fuel: calculateCardioFuelParams(45, 6), sFuel: calculateStrengthFuelParams(), sl: ["Deadlift: 3x5 (Heavy)", "RDL: 3x10 (Stretch focus)", "Leg Curls: 3x12", "Face Pulls: 3x15", "Calf Raises: 4x15", "<span class='armor'>[Armor] Pogo Jumps: 3x30s</span>", "<span class='armor'>[Armor] Soleus Raises: 4x15</span>"] },
-        { name: "TUE", ct: "Run: Zone 2", ci: [{l: "Dist", v: `${runMi}mi`}, {l: "Pace", v: "13:00/mi"}], cue: "Nasal Only", note: "Base building. Don't let your HR spike.", st: "Full Body & Engine", fuel: calculateCardioFuelParams(45, 5), sFuel: calculateStrengthFuelParams(), sl: ["Power Clean: 3x3", "DB Bench: 3x10", "Bulgarian Split Squat: 3x8/leg", "Plank: 3x60s", "Deadbugs: 3x20", "<span class='armor'>[Armor] Tibialis Raises: 3x20</span>", "<span class='armor'>[Armor] Copenhagen Plank: 3x30s</span>"] },
-        { name: "WED", ct: "Bike: Zone 2", ci: [{l: "Dur", v: "60m"}, {l: "Cadence", v: "90 RPM"}], cue: "Quiet Upper Body", note: "Endurance focus. Keep the legs moving consistently.", st: "Upper Body Push (Hypertrophy)", fuel: calculateCardioFuelParams(60, 5), sFuel: calculateStrengthFuelParams(), sl: ["Bench Press: 3x5", "Incline DB: 3x10", "Lateral Raises: 3x15", "Dips: 3xMax", "Skull Crushers: 3x12", "<span class='armor'>[Armor] Neck Extensions: 3x20</span>", "<span class='armor'>[Armor] Pogo Jumps: 3x30s</span>"] },
-        { name: "THU", ct: "Swim: Efficiency", ci: [{l: "Volume", v: `${sV}yd`}, {l: "Sets", v: `${Math.round(sV/50)}x50yd`}], cue: "Streamline Focus", note: "Drill-heavy. Efficiency over speed today.", st: "Lower Body Push (Strength)", fuel: calculateCardioFuelParams(45, 5), sFuel: calculateStrengthFuelParams(), sl: ["Back Squat: 3x5", "Leg Press: 3x12", "Walking Lunges: 3x10/side", "Tib Raises: 3x20", "Pogo Jumps: 3x30s", "<span class='armor'>[Armor] Soleus Raises: 4x15</span>", "<span class='armor'>[Armor] Tibialis Raises: 3x20</span>"] },
-        { name: "FRI", ct: "Run: 5K Tempo", ci: [{l: "Dist", v: "3.1mi"}, {l: "Target", v: "Race Intensity"}], cue: "Short Ground Contact", note: "Simulating the back half of the 70.3.", st: "Upper Body Pull (Strength)", fuel: calculateCardioFuelParams(30, 8), sFuel: calculateStrengthFuelParams(), sl: ["Weighted Pull-ups: 3xMax", "Pendlay Rows: 3x8", "Chest Supported Row: 3x12", "Bicep Curls: 3x12", "Reverse Flyes: 3x15", "<span class='armor'>[Armor] Clamshells: 3x20</span>", "<span class='armor'>[Armor] Pogo Jumps: 3x30s</span>"] },
-        { name: "SAT", ct: "Long Bike + Brick", ci: [{l: "Bike", v: `${bikeMi}mi`}, {l: "Walk", v: "15m Brick"}], cue: "Fuel Every 45m", note: "Practice your race-day digestion system.", st: "Functional Stabil.", fuel: calculateCardioFuelParams(120, 6), sFuel: calculateStrengthFuelParams(), sl: ["Single Leg RDL: 3x12", "Clamshells: 3x20", "Bird-Dog: 3x15", "Hanging Leg Raises: 3x12", "Copenhagen Plank: 3x30s", "<span class='armor'>[Armor] Tibialis Raises: 3x20</span>", "<span class='armor'>[Armor] Soleus Raises: 4x15</span>"] },
-        { name: "SUN", ct: "Active Reset", ci: [{l: "Type", v: "Walk"}, {l: "Time", v: "30m"}], cue: "Relax Shoulders", note: "System reset. Zero intensity. Family time.", st: "Full Mobility", fuel: `<span>Recovery Hydration</span><b>Water & Electrolytes Only</b>`, sFuel: `<span>Hydration Focus</span><b style="color:#fff;">Water & Electrolytes Only</b>`, sl: ["Couch Stretch: 3m/leg", "Pigeon Pose: 3m/leg", "Thoracic Rotation: 20/side", "Ankle Circles: 1m", "Foam Roll: 15m", "<span class='armor'>[Armor] Light Pogo Jumps: 3x20s</span>", "<span class='armor'>[Armor] Tibialis Raises: 2x20</span>"] }
+        { name: "MON", ct: "Swim: Form & Catch", ci: [{l: "Volume", v: `${sV}yd`}, {l: "Set", v: `${Math.round(sV/50)}x50yd`}], cue: "Early Vertical Forearm", note: "Cardio: Audible to midday if needed.", st: "Lower Body (Hypertrophy)", fuel: calculateCardioFuelParams(45, 6), sFuel: calculateStrengthFuelParams(), sl: ["Back Squat: 3x10", "Romanian Deadlift: 3x10", "Leg Extensions: 3x12", "Hamstring Curls: 3x12", "Calf Raises: 4x15", "<span class='armor'>[Armor] Tibialis Raises: 3x20</span>"] },
+        
+        { name: "TUE", ct: "Run: Aerobic RPE", ci: [{l: "Dist", v: `${runMi}mi`}, {l: "Target", v: "RPE 4-5"}], cue: "Conversational Pace", note: "Ignore HR if cadence lock happens. Run by feel.", st: "Upper Body (Hypertrophy)", fuel: calculateCardioFuelParams(45, 5), sFuel: calculateStrengthFuelParams(), sl: ["Incline DB Bench: 3x10", "Lat Pulldown: 3x10", "Overhead Press: 3x10", "Chest Supported Row: 3x12", "Bicep Curls: 3x15", "Tricep Pushdowns: 3x15"] },
+        
+        { name: "WED", ct: "Bike: Power Intervals", ci: [{l: "Dist", v: `${(bikeMi*0.5).toFixed(1)}mi`}, {l: "Effort", v: "88-92% FTP"}], cue: "Smooth Pedal Stroke", note: "Audible: Indoor KICKR or Outdoor based on weather/feel.", st: "Functional Core", fuel: calculateCardioFuelParams(60, 7), sFuel: calculateStrengthFuelParams(), sl: ["Kettlebell Swings: 4x15", "Pallof Press: 3x15/side", "Farmer's Carry: 3x60s", "Hanging Leg Raises: 3x15", "Copenhagen Plank: 3x45s/side"] },
+        
+        { name: "THU", ct: "Swim: Threshold", ci: [{l: "Volume", v: `${sV}yd`}, {l: "Sets", v: `${Math.round(sV/100)}x100yd`}], cue: "Consistent Breathing", note: "Cardio: Audible to midday if needed. Push the pace.", st: "Lower Body (Hypertrophy)", fuel: calculateCardioFuelParams(45, 7), sFuel: calculateStrengthFuelParams(), sl: ["Leg Press: 3x10", "Walking Lunges: 3x12/leg", "Glute Bridges: 3x15", "Seated Calf Raises: 3x15", "<span class='armor'>[Armor] Tibialis Raises: 3x20</span>"] },
+        
+        { name: "FRI", ct: "Run: Tempo Push", ci: [{l: "Dist", v: "3.1mi"}, {l: "Target", v: "Race Pace"}], cue: "Quick Turnover", note: "Simulate the back half of the 70.3 run.", st: "Upper Body (Hypertrophy)", fuel: calculateCardioFuelParams(30, 8), sFuel: calculateStrengthFuelParams(), sl: ["Weighted Pull-ups: 3x8", "Flat Bench Press: 3x10", "Seated Cable Row: 3x12", "Lateral Raises: 3x15", "Face Pulls: 3x15", "Hammer Curls: 3x12"] },
+        
+        { name: "SAT", ct: "Outdoor Long Bike + Brick", ci: [{l: "Bike", v: `${bikeMi}mi`}, {l: "Run", v: "15m Off Bike"}], cue: "Aero & Nutrition", note: "Practice dialing in your bottle nutrition on the road.", st: "Rest / Active Family Time", fuel: calculateCardioFuelParams(120, 6), sFuel: `<span>Post-Brick</span><b style="color:#fff;">Electrolyte Replenishment</b>`, sl: ["Pallof Press: 3x15/side", "Copenhagen Plank: 3x45s/side", "Hanging Leg Raises: 3x15", "Bird-Dog: 3x15/side", "<span class='armor'>[Armor] Pogo Jumps: 3x30s</span>"] },
+        
+        { name: "SUN", ct: "Active Reset", ci: [{l: "Type", v: "Walk"}, {l: "Time", v: "30m"}], cue: "Family Walk", note: "System reset. Zero intensity.", st: "Full Mobility", fuel: `<span>Recovery Hydration</span><b>Water & Electrolytes Only</b>`, sFuel: `<span>Hydration Focus</span><b style="color:#fff;">Water & Electrolytes Only</b>`, sl: ["Couch Stretch: 3m/leg", "Pigeon Pose: 3m/leg", "Thoracic Rotation: 20/side", "Foam Roll: 15m", "<span class='armor'>[Armor] Light Pogo Jumps: 3x20s</span>"] }
       ]};
     }
 
