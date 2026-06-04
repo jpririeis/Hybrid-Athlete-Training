@@ -30,10 +30,8 @@
   .check-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #2d2d2d; }
   .check-row b { color: var(--bpn-red); font-family: 'JetBrains Mono'; margin-right: 8px; }
   
-  .fuel-box { background: rgba(255,0,0,0.05); border: 1px solid var(--bpn-red); padding: 12px; border-radius: 4px; margin: 10px 0; font-family: 'JetBrains Mono'; font-size: 11px; display: flex; justify-content: space-between; align-items: center;}
-  .fuel-box span { color: #fff; }
-  .fuel-box b { color: var(--bpn-red); font-size: 12px; }
-
+  .fuel-box { background: rgba(255,0,0,0.05); border: 1px solid var(--bpn-red); padding: 12px; border-radius: 4px; margin: 10px 0; font-family: 'JetBrains Mono'; font-size: 11px; display: flex; justify-content: space-between; align-items: flex-start;}
+  
   .interval-box { background: #000; padding: 12px; margin: 10px 0; border-radius: 4px; border: 1px solid var(--bpn-light-grey); }
   .interval-row { display: flex; justify-content: space-between; font-family: 'JetBrains Mono'; font-size: 12px; margin-bottom: 5px; }
   .interval-row b { color: var(--bpn-red); }
@@ -61,9 +59,9 @@
   <div id="main-panel">
     <div class="card" style="border-left-color: #fff; background: #111;">
       <span class="tag" style="color: #fff;">05:00 - 06:30 // Morning Engine</span>
-      <div class="check-row"><span><b>05:00</b> Wake Up & Salt Water</span><input type="checkbox"></div>
+      <div class="check-row"><span><b>05:00</b> Wake Up, Alpha GPC & Vit B</span><input type="checkbox"></div>
       <div class="check-row"><span><b>05:10</b> Scripture Study (20m)</span><input type="checkbox"></div>
-      <div class="check-row"><span><b>05:30</b> Execute Cardio Session</span><input type="checkbox"></div>
+      <div class="check-row" style="border:none"><span><b>05:30</b> Execute Cardio Session</span><input type="checkbox"></div>
     </div>
     
     <div class="card">
@@ -84,19 +82,37 @@
   </div>
 
   <script>
-    // Updated Baselines based on accurate data limits
     const CONFIG = { scaling: 1.10, base: { run: 4.0, bike: 15.0, swim: 400 } };
     let selectedIdx = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1;
 
-    // 1:0.8 Ratio for endurance
-    function calculateCardioFuelParams(t, i) {
-      const total = (t/60) * (i > 7 ? 90 : 60);
-      return `<span>Intra-Workout Fuel</span><b>${Math.round(total*0.6)}g Malto / ${Math.round(total*0.4)}g Fruct</b>`;
+    function calculateCardioFuelParams(t) {
+      let malto = t > 60 ? "1/3 Cup" : "1/4 Cup";
+      return `<div style="width:100%; display:flex; flex-direction:column; gap:6px;">
+                <span style="color:#fff; font-weight:bold; font-size:12px; border-bottom:1px solid #333; padding-bottom:4px; margin-bottom:2px;">MORNING ENGINE FUEL</span>
+                <span style="color:#ccc;">• ${malto} Nutricost Maltodextrin</span>
+                <span style="color:#ccc;">• 2 Tbsp Sugar (Fructose source)</span>
+                <span style="color:#ccc;">• 1/2 tsp Pink Himalayan Salt (Coarse)</span>
+                <span style="color:#ccc;">• 1/8 tsp Nutricost Potassium Chloride</span>
+                <span style="color:#ccc;">• 1/8 tsp Nutricost Magnesium Malate</span>
+              </div>`;
     }
 
-    // Zero Carb, Electrolyte focus for gym
     function calculateStrengthFuelParams() {
-      return `<span>Cellular Hydration</span><b style="color:#fff;">Custom Bulk Electrolyte Mix</b>`;
+      return `<div style="width:100%; display:flex; flex-direction:column; gap:6px;">
+                <span style="color:#fff; font-weight:bold; font-size:12px; border-bottom:1px solid #333; padding-bottom:4px; margin-bottom:2px;">MIDDAY ARMOR FUEL</span>
+                <span style="color:#ccc;">• 1 tsp Nutricost Creatine Monohydrate</span>
+                <span style="color:#ccc;">• 1/2 tsp Pink Himalayan Salt (Coarse)</span>
+                <span style="color:#ccc;">• 1/8 tsp Nutricost Potassium Chloride</span>
+                <span style="color:#ccc;">• 1/8 tsp Nutricost Magnesium Malate</span>
+              </div>`;
+    }
+
+    function calculateRestFuelParams() {
+      return `<div style="width:100%; display:flex; flex-direction:column; gap:6px;">
+                <span style="color:#fff; font-weight:bold; font-size:12px; border-bottom:1px solid #333; padding-bottom:4px; margin-bottom:2px;">RECOVERY PROTOCOL</span>
+                <span style="color:#ccc;">• Hydrate intuitively with pure water</span>
+                <span style="color:#ccc;">• Prioritize whole food nutrition</span>
+              </div>`;
     }
 
     function getPlan(wk) {
@@ -116,19 +132,19 @@
       return { 
         totals: weeklyTotals,
         days: [
-        { name: "MON", ct: "Swim: Form & Catch", ci: [{l: "Volume", v: `${sV}yd`}, {l: "Set", v: `${Math.round(sV/50)}x50yd`}], cue: "Early Vertical Forearm", note: "Cardio: Audible to midday if needed.", st: "Lower Body (Hypertrophy)", fuel: calculateCardioFuelParams(45, 6), sFuel: calculateStrengthFuelParams(), sl: ["Back Squat: 3x10", "Romanian Deadlift: 3x10", "Leg Extensions: 3x12", "Hamstring Curls: 3x12", "Calf Raises: 4x15", "<span class='armor'>[Armor] Tibialis Raises: 3x20</span>"] },
+        { name: "MON", ct: "Swim: Form & Catch", ci: [{l: "Volume", v: `${sV}yd`}, {l: "Set", v: `${Math.round(sV/50)}x50yd`}], cue: "Early Vertical Forearm", note: "Cardio: Audible to midday if needed.", st: "Lower Body (Hypertrophy)", fuel: calculateCardioFuelParams(45), sFuel: calculateStrengthFuelParams(), sl: ["Back Squat: 3x10", "Romanian Deadlift: 3x10", "Leg Extensions: 3x12", "Hamstring Curls: 3x12", "Calf Raises: 4x15", "<span class='armor'>[Armor] Tibialis Raises: 3x20</span>"] },
         
-        { name: "TUE", ct: "Run: Aerobic RPE", ci: [{l: "Dist", v: `${runMi}mi`}, {l: "Target", v: "RPE 4-5"}], cue: "Conversational Pace", note: "Ignore HR if cadence lock happens. Run by feel.", st: "Upper Body (Hypertrophy)", fuel: calculateCardioFuelParams(45, 5), sFuel: calculateStrengthFuelParams(), sl: ["Incline DB Bench: 3x10", "Lat Pulldown: 3x10", "Overhead Press: 3x10", "Chest Supported Row: 3x12", "Bicep Curls: 3x15", "Tricep Pushdowns: 3x15"] },
+        { name: "TUE", ct: "Run: Aerobic RPE", ci: [{l: "Dist", v: `${runMi}mi`}, {l: "Target", v: "RPE 4-5"}], cue: "Conversational Pace", note: "Ignore HR if cadence lock happens. Run by feel.", st: "Upper Body (Hypertrophy)", fuel: calculateCardioFuelParams(45), sFuel: calculateStrengthFuelParams(), sl: ["Incline DB Bench: 3x10", "Lat Pulldown: 3x10", "Overhead Press: 3x10", "Chest Supported Row: 3x12", "Bicep Curls: 3x15", "Tricep Pushdowns: 3x15"] },
         
-        { name: "WED", ct: "Bike: Power Intervals", ci: [{l: "Dist", v: `${(bikeMi*0.5).toFixed(1)}mi`}, {l: "Effort", v: "88-92% FTP"}], cue: "Smooth Pedal Stroke", note: "Audible: Indoor KICKR or Outdoor based on weather/feel.", st: "Functional Core", fuel: calculateCardioFuelParams(60, 7), sFuel: calculateStrengthFuelParams(), sl: ["Kettlebell Swings: 4x15", "Pallof Press: 3x15/side", "Farmer's Carry: 3x60s", "Hanging Leg Raises: 3x15", "Copenhagen Plank: 3x45s/side"] },
+        { name: "WED", ct: "Bike: Power Intervals", ci: [{l: "Dist", v: `${(bikeMi*0.5).toFixed(1)}mi`}, {l: "Effort", v: "88-92% FTP"}], cue: "Smooth Pedal Stroke", note: "Audible: Indoor KICKR or Outdoor based on weather/feel.", st: "Functional Core", fuel: calculateCardioFuelParams(60), sFuel: calculateStrengthFuelParams(), sl: ["Kettlebell Swings: 4x15", "Pallof Press: 3x15/side", "Farmer's Carry: 3x60s", "Hanging Leg Raises: 3x15", "Copenhagen Plank: 3x45s/side"] },
         
-        { name: "THU", ct: "Swim: Threshold", ci: [{l: "Volume", v: `${sV}yd`}, {l: "Sets", v: `${Math.round(sV/100)}x100yd`}], cue: "Consistent Breathing", note: "Cardio: Audible to midday if needed. Push the pace.", st: "Lower Body (Hypertrophy)", fuel: calculateCardioFuelParams(45, 7), sFuel: calculateStrengthFuelParams(), sl: ["Leg Press: 3x10", "Walking Lunges: 3x12/leg", "Glute Bridges: 3x15", "Seated Calf Raises: 3x15", "<span class='armor'>[Armor] Tibialis Raises: 3x20</span>"] },
+        { name: "THU", ct: "Swim: Threshold", ci: [{l: "Volume", v: `${sV}yd`}, {l: "Sets", v: `${Math.round(sV/100)}x100yd`}], cue: "Consistent Breathing", note: "Cardio: Audible to midday if needed. Push the pace.", st: "Lower Body (Hypertrophy)", fuel: calculateCardioFuelParams(45), sFuel: calculateStrengthFuelParams(), sl: ["Leg Press: 3x10", "Walking Lunges: 3x12/leg", "Glute Bridges: 3x15", "Seated Calf Raises: 3x15", "<span class='armor'>[Armor] Tibialis Raises: 3x20</span>"] },
         
-        { name: "FRI", ct: "Run: Tempo Push", ci: [{l: "Dist", v: "3.1mi"}, {l: "Target", v: "Race Pace"}], cue: "Quick Turnover", note: "Simulate the back half of the 70.3 run.", st: "Upper Body (Hypertrophy)", fuel: calculateCardioFuelParams(30, 8), sFuel: calculateStrengthFuelParams(), sl: ["Weighted Pull-ups: 3x8", "Flat Bench Press: 3x10", "Seated Cable Row: 3x12", "Lateral Raises: 3x15", "Face Pulls: 3x15", "Hammer Curls: 3x12"] },
+        { name: "FRI", ct: "Run: Tempo Push", ci: [{l: "Dist", v: "3.1mi"}, {l: "Target", v: "Race Pace"}], cue: "Quick Turnover", note: "Simulate the back half of the 70.3 run.", st: "Upper Body (Hypertrophy)", fuel: calculateCardioFuelParams(30), sFuel: calculateStrengthFuelParams(), sl: ["Weighted Pull-ups: 3x8", "Flat Bench Press: 3x10", "Seated Cable Row: 3x12", "Lateral Raises: 3x15", "Face Pulls: 3x15", "Hammer Curls: 3x12"] },
         
-        { name: "SAT", ct: "Outdoor Long Bike + Brick", ci: [{l: "Bike", v: `${bikeMi}mi`}, {l: "Run", v: "15m Off Bike"}], cue: "Aero & Nutrition", note: "Practice dialing in your bottle nutrition on the road.", st: "Rest / Active Family Time", fuel: calculateCardioFuelParams(120, 6), sFuel: `<span>Post-Brick</span><b style="color:#fff;">Electrolyte Replenishment</b>`, sl: ["Pallof Press: 3x15/side", "Copenhagen Plank: 3x45s/side", "Hanging Leg Raises: 3x15", "Bird-Dog: 3x15/side", "<span class='armor'>[Armor] Pogo Jumps: 3x30s</span>"] },
+        { name: "SAT", ct: "Outdoor Long Bike + Brick", ci: [{l: "Bike", v: `${bikeMi}mi`}, {l: "Run", v: "15m Off Bike"}], cue: "Aero & Nutrition", note: "Practice dialing in your bottle nutrition on the road.", st: "Rest / Active Family Time", fuel: calculateCardioFuelParams(120), sFuel: calculateRestFuelParams(), sl: ["No Gym Session Today", "Focus on recovery nutrition"] },
         
-        { name: "SUN", ct: "Active Reset", ci: [{l: "Type", v: "Walk"}, {l: "Time", v: "30m"}], cue: "Family Walk", note: "System reset. Zero intensity.", st: "Full Mobility", fuel: `<span>Recovery Hydration</span><b>Water & Electrolytes Only</b>`, sFuel: `<span>Hydration Focus</span><b style="color:#fff;">Water & Electrolytes Only</b>`, sl: ["Couch Stretch: 3m/leg", "Pigeon Pose: 3m/leg", "Thoracic Rotation: 20/side", "Foam Roll: 15m", "<span class='armor'>[Armor] Light Pogo Jumps: 3x20s</span>"] }
+        { name: "SUN", ct: "Active Reset", ci: [{l: "Type", v: "Walk"}, {l: "Time", v: "30m"}], cue: "Family Walk", note: "System reset. Zero intensity.", st: "Full Mobility", fuel: calculateRestFuelParams(), sFuel: calculateRestFuelParams(), sl: ["Couch Stretch: 3m/leg", "Pigeon Pose: 3m/leg", "Thoracic Rotation: 20/side", "Foam Roll: 15m", "<span class='armor'>[Armor] Light Pogo Jumps: 3x20s</span>"] }
       ]};
     }
 
@@ -138,12 +154,10 @@
       const plan = getPlan(wk);
       const day = plan.days[idx];
       
-      // Update Headers
       document.getElementById("w-swim").innerText = plan.totals.swim;
       document.getElementById("w-bike").innerText = plan.totals.bike;
       document.getElementById("w-run").innerText = plan.totals.run;
 
-      // Update Daily Data
       document.getElementById("c-title").innerText = day.ct;
       document.getElementById("c-cue").innerText = `Cue: ${day.cue}`;
       document.getElementById("c-note").innerText = `Coach: ${day.note}`;
