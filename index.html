@@ -82,21 +82,19 @@
   </div>
 
   <script>
-    const CONFIG = { scaling: 1.10, base: { run: 4.0, bike: 15.0, swim: 400 } };
+    const CONFIG = { scaling: 1.10, base: { bike: 15.0, swim: 400 } };
     let selectedIdx = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1;
 
     // Time-Based Run Progression Algorithm
+    // Calibrated to align the 55-minute base build with Week 11 (Current Week in the plan)
     function getWeeklyRunTarget(wk) {
-      const baseProgression = { 1: 55, 2: 60, 3: 65, 4: 45, 5: 70 };
-      if (baseProgression[wk]) return baseProgression[wk];
-      
-      let isDeload = wk % 4 === 0;
-      let cycle = Math.floor((wk - 1) / 4);
-      let weekInCycle = (wk - 1) % 4; 
-      
-      let baseMinutes = 55 + (cycle * 15); 
-      if (isDeload) return baseMinutes - 5; 
-      return baseMinutes + (weekInCycle * 5);
+      const progression = {
+        1: 55, 2: 55, 3: 55, 4: 55, 5: 55, 6: 55, 7: 55, 8: 55, 9: 55, 10: 55, // Pre-baseline logic
+        11: 55, 12: 60, 13: 65, 14: 45, // Base Block 1 & Deload
+        15: 70, 16: 75, 17: 80, 18: 60, // Base Block 2 & Deload
+        19: 85, 20: 90                  // Peak Phase
+      };
+      return progression[wk] || 55;
     }
 
     // Threshold & Time-Based Fueling Logic
@@ -157,14 +155,19 @@
       
       const sV = Math.round((CONFIG.base.swim * scale)/50)*50;
       const bikeMi = (CONFIG.base.bike * scale).toFixed(1);
-      const runMi = (CONFIG.base.run * scale).toFixed(1);
+      
       const runTime = getWeeklyRunTarget(wk);
       const tempoRunTime = 30; // Friday's fixed tempo runtime
+      const brickRunMi = 1.5; // Saturday brick distance
+      
+      // Dynamically calculate realistic mileage based on historical pacing to fulfill mileage goals
+      const runMi = (runTime / 9.5).toFixed(1); // Avg Zone 2 pace
+      const tempoRunMi = (tempoRunTime / 8.5).toFixed(1); // Avg Tempo pace
       
       const weeklyTotals = {
         swim: `${sV * 2} YD`,
         bike: `${(parseFloat(bikeMi) + parseFloat((bikeMi*0.5).toFixed(1))).toFixed(1)} MI`,
-        run: `${(parseFloat(runMi) + 3.1).toFixed(1)} MI`
+        run: `${(parseFloat(runMi) + parseFloat(tempoRunMi) + brickRunMi).toFixed(1)} MI`
       };
 
       return { 
@@ -178,7 +181,7 @@
         
         { name: "THU", ct: "Swim: Threshold", ci: [{l: "Volume", v: `${sV}yd`}, {l: "Sets", v: `${Math.round(sV/100)}x100yd`}], cue: "Consistent Breathing", note: "Cardio: Audible to midday if needed. Push the pace.", st: "Lower Body (Hypertrophy)", fuel: calculateCardioFuelParams(45), sFuel: calculateStrengthFuelParams(), sl: ["Leg Press: 3x10", "Walking Lunges: 3x12/leg", "Glute Bridges: 3x15", "Seated Calf Raises: 3x15", "<span class='armor'>[Armor] Tibialis Raises: 3x20</span>"] },
         
-        { name: "FRI", ct: "Run: Tempo Push", ci: [{l: "Time", v: `${tempoRunTime}m`}, {l: "Dist", v: "3.1mi"}, {l: "Target", v: "Race Pace"}], cue: "Quick Turnover", note: "Simulate the back half of the 70.3 run.", st: "Upper Body (Hypertrophy)", fuel: calculateCardioFuelParams(tempoRunTime), sFuel: calculateStrengthFuelParams(), sl: ["Weighted Pull-ups: 3x8", "Flat Bench Press: 3x10", "Seated Cable Row: 3x12", "Lateral Raises: 3x15", "Face Pulls: 3x15", "Hammer Curls: 3x12"] },
+        { name: "FRI", ct: "Run: Tempo Push", ci: [{l: "Time", v: `${tempoRunTime}m`}, {l: "Dist", v: `${tempoRunMi}mi`}, {l: "Target", v: "Race Pace"}], cue: "Quick Turnover", note: "Simulate the back half of the 70.3 run.", st: "Upper Body (Hypertrophy)", fuel: calculateCardioFuelParams(tempoRunTime), sFuel: calculateStrengthFuelParams(), sl: ["Weighted Pull-ups: 3x8", "Flat Bench Press: 3x10", "Seated Cable Row: 3x12", "Lateral Raises: 3x15", "Face Pulls: 3x15", "Hammer Curls: 3x12"] },
         
         { name: "SAT", ct: "Outdoor Long Bike + Brick", ci: [{l: "Bike", v: `${bikeMi}mi`}, {l: "Run", v: "15m Off Bike"}], cue: "Aero & Nutrition", note: "Practice dialing in your bottle nutrition on the road.", st: "Rest / Active Family Time", fuel: calculateCardioFuelParams(150), sFuel: calculateRestFuelParams(), sl: ["No Gym Session Today", "Focus on recovery nutrition"] },
         
@@ -248,5 +251,4 @@
     init();
   </script>
 </body>
-</html>
 </html>
