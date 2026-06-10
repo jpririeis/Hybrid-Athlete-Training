@@ -91,16 +91,57 @@
     let selectedIdx = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1;
 
     function calculateCardioFuelParams(durationMinutes) {
-      if (durationMinutes < 60) return `<div style="width:100%;"><span style="color:#fff; font-weight:bold; font-size:12px;">HYDRATION (0g Carbs)</span><br><span style="color:#ccc;">• Electrolyte Base</span></div>`;
-      if (durationMinutes <= 90) return `<div style="width:100%;"><span style="color:#fff; font-weight:bold; font-size:12px;">STANDARD FUEL (30-45g/hr)</span><br><span style="color:#ccc;">• 1/4c Maltodextrin + 1Tbsp Sugar + Electrolytes</span></div>`;
-      return `<div style="width:100%;"><span style="color:#fff; font-weight:bold; font-size:12px;">ENDURANCE STACK (60-90g/hr)</span><br><span style="color:#ccc;">• 1/3c Maltodextrin + 2Tbsp Sugar + Electrolytes</span></div>`;
+      let mixType = "";
+      let ingredients = "";
+      
+      if (durationMinutes < 60) {
+        mixType = "HYDRATION & ELECTROLYTES (0g Carbs)";
+        ingredients = `<span style="color:#ccc;">• 1/2 tsp Pink Himalayan Salt (Coarse)</span>
+                       <span style="color:#ccc;">• 1/8 tsp Nutricost Potassium Chloride</span>
+                       <span style="color:#ccc;">• 1/8 tsp Nutricost Magnesium Malate</span>`;
+      } else if (durationMinutes <= 90) {
+        mixType = "STANDARD FUEL (30-45g Carbs/hr)";
+        ingredients = `<span style="color:#ccc;">• 1/4 Cup Nutricost Maltodextrin</span>
+                       <span style="color:#ccc;">• 1 Tbsp Bulk Supplements Fructose</span>
+                       <span style="color:#ccc;">• 1/2 tsp Pink Himalayan Salt (Coarse)</span>
+                       <span style="color:#ccc;">• 1/8 tsp Nutricost Potassium Chloride</span>
+                       <span style="color:#ccc;">• 1/8 tsp Nutricost Magnesium Malate</span>
+                       <span style="color:#ccc; font-style:italic;">*If before 1:00 PM, add caffeine.</span>`;
+      } else {
+        mixType = "ENDURANCE STACK (60-90g Carbs/hr)";
+        ingredients = `<span style="color:#ccc;">• 1/3 Cup Nutricost Maltodextrin</span>
+                       <span style="color:#ccc;">• 2 Tbsp Bulk Supplements Fructose</span>
+                       <span style="color:#ccc;">• 1/2 tsp Pink Himalayan Salt (Coarse)</span>
+                       <span style="color:#ccc;">• 1/8 tsp Nutricost Potassium Chloride</span>
+                       <span style="color:#ccc;">• 1/8 tsp Nutricost Magnesium Malate</span>
+                       <span style="color:#ccc; font-style:italic;">*If before 1:00 PM, add caffeine.</span>`;
+      }
+
+      return `<div style="width:100%; display:flex; flex-direction:column; gap:6px;">
+                <span style="color:#fff; font-weight:bold; font-size:12px; border-bottom:1px solid #333; padding-bottom:4px; margin-bottom:2px;">${mixType}</span>
+                ${ingredients}
+              </div>`;
     }
 
-    function calculateStrengthFuelParams() { return `<div style="width:100%;"><span style="color:#fff; font-weight:bold; font-size:12px;">ARMOR FUEL</span><br><span style="color:#ccc;">• 5g Creatine + Electrolytes</span></div>`; }
-    function calculateRestFuelParams() { return `<div style="width:100%;"><span style="color:#fff; font-weight:bold; font-size:12px;">RECOVERY</span><br><span style="color:#ccc;">• Pure Hydration & Whole Foods</span></div>`; }
+    function calculateStrengthFuelParams() {
+      return `<div style="width:100%; display:flex; flex-direction:column; gap:6px;">
+                <span style="color:#fff; font-weight:bold; font-size:12px; border-bottom:1px solid #333; padding-bottom:4px; margin-bottom:2px;">MIDDAY ARMOR FUEL</span>
+                <span style="color:#ccc;">• 1 tsp Nutricost Creatine Monohydrate</span>
+                <span style="color:#ccc;">• 1/2 tsp Pink Himalayan Salt (Coarse)</span>
+                <span style="color:#ccc;">• 1/8 tsp Nutricost Potassium Chloride</span>
+                <span style="color:#ccc;">• 1/8 tsp Nutricost Magnesium Malate</span>
+              </div>`;
+    }
+
+    function calculateRestFuelParams() {
+      return `<div style="width:100%; display:flex; flex-direction:column; gap:6px;">
+                <span style="color:#fff; font-weight:bold; font-size:12px; border-bottom:1px solid #333; padding-bottom:4px; margin-bottom:2px;">RECOVERY PROTOCOL</span>
+                <span style="color:#ccc;">• Hydrate intuitively with pure water</span>
+                <span style="color:#ccc;">• Prioritize whole food nutrition</span>
+              </div>`;
+    }
 
     function getPlan(wk) {
-      // 3:1 Loading Strategy
       const isDeload = (wk % 4 === 0);
       const volScale = isDeload ? 0.75 : 1.0;
       
@@ -115,9 +156,7 @@
       
       let schedule = [];
 
-      // DYNAMIC SCHEDULE RENDERING
       if (wk < 13) {
-        // --- PHASE 1: BASE (Time-Based + Strides) ---
         schedule = [
           { name: "MON", ct: "Swim: Aerobic Base", ci: [{l: "Time", v: `${Math.round(45*volScale)}m`}, {l: "Target", v: "Zone 2"}, {l: "Finisher", v: "4x25yd Sprints"}], cue: "Smooth Form", note: "Cardio: 45s rest at wall during sprints.", st: "Lower Body (Hypertrophy)", fuel: calculateCardioFuelParams(45), sFuel: calculateStrengthFuelParams(), sl: ["Back Squat: 3x10", "Romanian Deadlift: 3x10", "Leg Extensions: 3x12", "Hamstring Curls: 3x12", "Calf Raises: 4x15", "<span class='armor'>[Armor] Tibialis Raises: 3x20</span>"] },
           { name: "TUE", ct: "Run: Aerobic Base", ci: [{l: "Time", v: `${Math.round(55*volScale)}m`}, {l: "Target", v: "Zone 2"}, {l: "Finisher", v: "5x20s Strides"}], cue: "Conversational Pace", note: "Walk back to recover fully between strides.", st: "Upper Body (Hypertrophy)", fuel: calculateCardioFuelParams(55), sFuel: calculateStrengthFuelParams(), sl: ["Incline DB Bench: 3x10", "Lat Pulldown: 3x10", "Overhead Press: 3x10", "Chest Supported Row: 3x12", "Bicep Curls: 3x15", "Tricep Pushdowns: 3x15"] },
@@ -128,7 +167,6 @@
           { name: "SUN", ct: "Active Reset", ci: [{l: "Type", v: "Walk / Yoga"}, {l: "Time", v: "40m"}], cue: "Family Walk", note: "Zero intensity strides today.", st: "Full Mobility", fuel: calculateRestFuelParams(), sFuel: calculateRestFuelParams(), sl: ["Couch Stretch: 3m/leg", "Pigeon Pose: 3m/leg", "Thoracic Rotation: 20/side", "Foam Roll: 15m", "<span class='armor'>[Armor] Light Pogo Jumps: 3x20s</span>"] }
         ];
       } else {
-        // --- PHASE 2: BUILD (Mileage & Intervals) ---
         schedule = [
           { name: "MON", ct: "Swim: Endurance", ci: [{l: "Total", v: `${Math.round(2000*volScale)}yd`}, {l: "Main Set", v: "4x400yd @ Race Pace"}, {l: "Rest", v: "30s at wall"}], cue: "Pacing Discipline", note: "Warmup: 400yd easy. Cooldown: 200yd easy pull buoy.", st: "Lower Body (Hypertrophy)", fuel: calculateCardioFuelParams(60), sFuel: calculateStrengthFuelParams(), sl: ["Back Squat: 3x10", "Romanian Deadlift: 3x10", "Leg Extensions: 3x12", "Hamstring Curls: 3x12", "Calf Raises: 4x15", "<span class='armor'>[Armor] Tibialis Raises: 3x20</span>"] },
           { name: "TUE", ct: "Run: Threshold", ci: [{l: "Total", v: `${(6*volScale).toFixed(1)}mi`}, {l: "Main Set", v: "3x1mi @ Zone 4"}, {l: "Rest", v: "2m Walk"}], cue: "Embrace the Burn", note: "Warmup/Cooldown: 1.5mi Zone 2.", st: "Upper Body (Hypertrophy)", fuel: calculateCardioFuelParams(60), sFuel: calculateStrengthFuelParams(), sl: ["Incline DB Bench: 3x10", "Lat Pulldown: 3x10", "Overhead Press: 3x10", "Chest Supported Row: 3x12", "Bicep Curls: 3x15", "Tricep Pushdowns: 3x15"] },
@@ -177,7 +215,7 @@
 
     function init() {
       const race = new Date("September 13, 2026").getTime();
-      const todayDate = new Date("June 10, 2026").getTime(); // Using specific simulation date based on logs
+      const todayDate = new Date("June 10, 2026").getTime();
       document.getElementById("countdown").innerText = Math.max(0, Math.floor((race - todayDate) / (1000*60*60*24))) + " DAYS TO RACE";
       
       const startDate = new Date("March 30, 2026").getTime();
